@@ -8,6 +8,7 @@ import Button from "@/app/components/Button";
 import AuthSocialButton from "@/app/(site)/components/AuthSocialButton";
 import {BsGithub, BsGoogle} from "react-icons/bs";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 type Variant = 'LOGIN' | 'REGISTER';
 const MESSENGER_API_URL = "http://localhost:8080";
@@ -43,10 +44,20 @@ const AuthForm = () => {
 
     if(variant === 'REGISTER') {
       axios.post(`${MESSENGER_API_URL}` + '/api/user/save', data)
+          .catch(() => toast.error('Something went wrong!'))
+          .finally(() => setIsLoading(false));
     }
 
     if (variant === 'LOGIN') {
-      // NextAuth SignIn
+      axios.post(`${MESSENGER_API_URL}` + '/api/user/login', data)
+          .catch(function (error) {
+            if (error.response) {
+              console.log('data:' + error.response.data);
+              console.log('status:' + error.response.status);
+              console.log('headers:' + error.response.headers);
+              toast.error('Invalid credentials');
+            }
+          }).finally(() => setIsLoading(false));
     }
   }
 

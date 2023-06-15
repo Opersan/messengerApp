@@ -1,12 +1,16 @@
 package com.kiraz.messengerapp.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Date;
+import java.time.Instant;
 import java.util.List;
 
 @Entity
@@ -37,10 +41,12 @@ public class User {
     private String hashedPassword;
 
     @Column
-    private Date createdAt;
+    @CreationTimestamp
+    private Instant createdAt;
 
     @Column
-    private Date updatedAt;
+    @UpdateTimestamp
+    private Instant updatedAt;
 
     @ManyToMany
     @JoinTable(name = "conversation_users",
@@ -60,4 +66,5 @@ public class User {
 
     @OneToMany(mappedBy = "senderUser")
     private List<Message> messages;
+
 }
