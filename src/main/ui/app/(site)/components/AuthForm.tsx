@@ -7,8 +7,10 @@ import Input from "@/app/components/inputs/Input";
 import Button from "@/app/components/Button";
 import AuthSocialButton from "@/app/(site)/components/AuthSocialButton";
 import {BsGithub, BsGoogle} from "react-icons/bs";
+import axios from "axios";
 
 type Variant = 'LOGIN' | 'REGISTER';
+const MESSENGER_API_URL = "http://localhost:8080";
 
 const AuthForm = () => {
   const [variant, setVariant] = useState<Variant>('LOGIN');
@@ -40,7 +42,7 @@ const AuthForm = () => {
     setIsLoading(true);
 
     if(variant === 'REGISTER') {
-      // Axios register
+      axios.post(`${MESSENGER_API_URL}` + '/api/user/save', data)
     }
 
     if (variant === 'LOGIN') {
