@@ -9,9 +9,11 @@ import AuthSocialButton from "@/app/(site)/components/AuthSocialButton";
 import {BsGithub, BsGoogle} from "react-icons/bs";
 import axios from "axios";
 import toast from "react-hot-toast";
+import {signIn} from "next-auth/react";
 
 type Variant = 'LOGIN' | 'REGISTER';
 const MESSENGER_API_URL = "http://localhost:8080";
+let access_token;
 
 const AuthForm = () => {
   const [variant, setVariant] = useState<Variant>('LOGIN');
@@ -47,24 +49,33 @@ const AuthForm = () => {
           .catch(() => toast.error('Something went wrong!'))
           .finally(() => setIsLoading(false));
     }
-
     if (variant === 'LOGIN') {
-      axios.post(`${MESSENGER_API_URL}` + '/api/user/login', data)
+      axios.post(`${MESSENGER_API_URL}` + '/api/user/loginWithPwd', data)
+          .then(function (response) {
+            access_token = response.data.accessToken;
+            toast.success('Logged-in successfully');
+          })
           .catch(function (error) {
-            if (error.response) {
-              console.log('data:' + error.response.data);
-              console.log('status:' + error.response.status);
-              console.log('headers:' + error.response.headers);
+            if (error.response.status === 403) {
               toast.error('Invalid credentials');
             }
           }).finally(() => setIsLoading(false));
     }
   }
 
-  const socialAction = (action: string) =>  {
+  const socialAction = (action: string) => {
     setIsLoading(true);
 
-    // NextAuth Social Sign In
+    signIn(action, {redirect: false})
+        .then((callback) => {
+          console.log(callback);
+          if (callback?.error) {
+            toast.error('Invalid credentials');
+          } else if (callback?.ok && !callback?.error) {
+            toast.success('Logged-in successfully');
+          }
+        })
+
   }
 
   return (

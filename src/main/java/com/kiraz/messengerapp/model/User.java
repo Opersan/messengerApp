@@ -8,9 +8,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.sql.Date;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -66,5 +68,4 @@ public class User {
 
     @OneToMany(mappedBy = "senderUser")
     private List<Message> messages;
-
 }
