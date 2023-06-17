@@ -18,16 +18,9 @@ export const authOptions: AuthOptions = {
     ],
     callbacks: {
         async jwt({ token, account, profile }) {
-            console.log("Objects: ");
-            console.log({objects: [token, account, profile]});
-            console.log("Bitti");
-            axios.post(`${MESSENGER_API_URL}` + '/api/user/saveSilent', {token: token, account: account, profile: profile})
-                .then(function (response){
-                }).catch((error) => {
-                    if (error == 403) console.log("403 hatası");
-            });
+            axios.post(`${MESSENGER_API_URL}` + '/api/user/loginWithOAuth2', {token: token, account: account, profile: profile})
             return token;
-        },
+        }
     },
     debug: process.env.NODE_ENV === 'development',
 

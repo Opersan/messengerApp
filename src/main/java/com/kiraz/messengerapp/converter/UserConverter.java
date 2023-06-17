@@ -42,12 +42,9 @@ public class UserConverter {
 
     public static User convertProfileToUser(ProfileDTO profileDTO) {
         User user = new User();
-
         user.setName(profileDTO.getName());
         user.setEmail(profileDTO.getEmail());
-        user.setEmailVerified(DateUtils.convertStringDate(profileDTO.getEmail_verified()));
         user.setImage(profileDTO.getPicture());
-        user.setHashedPassword(profileDTO.getAt_hash());
         user.setCreatedAt(Instant.ofEpochMilli(profileDTO.getIat()));
 
         return user;

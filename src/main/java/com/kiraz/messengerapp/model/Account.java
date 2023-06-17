@@ -19,6 +19,7 @@ public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private long id;
 
     @Column
@@ -42,13 +43,12 @@ public class Account {
     @Column
     private int expires_at;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String id_token;
 
     @Column
     private String session_state;
 
     @OneToOne(mappedBy = "account")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 }

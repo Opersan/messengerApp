@@ -6,6 +6,8 @@ import com.kiraz.messengerapp.service.AccountService;
 import com.kiraz.messengerapp.service.JwtTokenService;
 import com.kiraz.messengerapp.service.UserService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +22,8 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/api/user")
 @CrossOrigin(origins = {"http://localhost:3000"})
 public class AuthController {
+
+    private Logger logger = LoggerFactory.getLogger(AuthController.class);
     private UserService userService;
     private AccountService accountService;
     private AuthenticationManager authenticationManager;
@@ -42,18 +46,6 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/saveSilent")
-    public ResponseEntity<String> saveUserSilent(@JsonArg("token") TokenDTO tokenDTO,
-                                                                     @JsonArg("account") AccountDTO account, @JsonArg("profile") ProfileDTO profileDTO) {
-        try {
-            AccountDTO accountDTO = accountService.saveAccount(account);
-            ProfileDTO profileDTO1 = userService.saveUserByProfile(profileDTO);
-            return new ResponseEntity<>("success", HttpStatus.OK);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
     @PostMapping("/loginWithPwd")
     public UserLoginResponse loginWithPwd(@Valid @RequestBody UserLoginRequest user) {
         try {
@@ -61,6 +53,7 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
 
         }catch (final BadCredentialsException ex) {
+            logger.error(String.valueOf(ex));
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
 
@@ -71,11 +64,22 @@ public class AuthController {
         return userLoginResponse;
     }
 
-    @PostMapping("/loginWithOauth2")
-    public UserLoginResponse loginWithGoogle(@Valid @RequestBody String action) {
+    @PostMapping("/loginWithOAuth2")
+    public UserLoginResponse loginWithGoogle(@JsonArg("token") TokenDTO tokenDTO,
+                                             @JsonArg("account") AccountDTO account, @JsonArg("profile") ProfileDTO profileDTO) {
         try {
-
+            if (userService.getUserByEmail(profileDTO.getEmail()).isEmpty()) {
+                userService.saveUserByProfile(profileDTO, account);
+            } else {
+                userService.updateUserByProfile(profileDTO, account);
+            }
+            if (accountService.getAccountByProviderId(account.getProviderAccountId()).isEmpty()) {
+                accountService.saveAccountByAccountDTO(account);
+            } else {
+                accountService.updateAccountByAccountDTO(account);
+            }
         } catch (final BadCredentialsException ex) {
+            logger.error(String.valueOf(ex));
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
 

@@ -1,5 +1,6 @@
 package com.kiraz.messengerapp.service;
 
+import com.kiraz.messengerapp.converter.AccountConverter;
 import com.kiraz.messengerapp.dto.*;
 import com.kiraz.messengerapp.converter.UserConverter;
 import com.kiraz.messengerapp.model.User;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -35,15 +37,32 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id);
     }
 
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
     public UserDTO saveUser(UserDTO user) {
         User newUser = UserConverter.convertUserDTOtoUserConverter(user);
         newUser.setHashedPassword(passwordEncoder.encode(user.getPassword()));
         return UserConverter.convertUserDTOtoUserConverter(userRepository.save(newUser));
     }
 
-    public ProfileDTO saveUserByProfile(ProfileDTO profileDTO) {
+    public ProfileDTO saveUserByProfile(ProfileDTO profileDTO, AccountDTO accountDTO) {
         User newUser = UserConverter.convertProfileToUser(profileDTO);
-        return UserConverter.convertUserToProfileDTO(newUser);
+        newUser.setAccount(AccountConverter.convertAccountDTOtoAccount(accountDTO));
+        return UserConverter.convertUserToProfileDTO(userRepository.save(newUser));
+    }
+
+    public void updateUserByProfile(ProfileDTO profileDTO, AccountDTO accountDTO) {
+        User updatedUser = userRepository.findByEmail(profileDTO.getEmail()).get();
+
+        updatedUser.setName(profileDTO.getName());
+        updatedUser.setEmail(profileDTO.getEmail());
+        updatedUser.setImage(profileDTO.getPicture());
+        updatedUser.setCreatedAt(Instant.ofEpochMilli(profileDTO.getIat()));
+        updatedUser.setAccount(AccountConverter.convertAccountDTOtoAccount(accountDTO));
+
+        userRepository.save(updatedUser);
     }
 
     public UserRegisterOAuth2Response saveUserSilent(UserRegisterOAuth2Request user) {

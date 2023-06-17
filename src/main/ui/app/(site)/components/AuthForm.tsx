@@ -68,14 +68,17 @@ const AuthForm = () => {
 
     signIn(action, {redirect: false})
         .then((callback) => {
-          console.log(callback);
+          console.log("Error:" + callback?.error);
+          console.log("Status:" + callback?.status);
+          console.log("Ok:" + callback?.ok);
+          console.log("URL:" + callback?.url);
           if (callback?.error) {
             toast.error('Invalid credentials');
-          } else if (callback?.ok && !callback?.error) {
+          }
+          if (callback?.ok && !callback?.error) {
             toast.success('Logged-in successfully');
           }
-        })
-
+        }).finally(() => setIsLoading(false));
   }
 
   return (
