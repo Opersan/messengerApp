@@ -1,6 +1,8 @@
 package com.kiraz.messengerapp.controller;
 
+import com.kiraz.messengerapp.annotation.JsonArg;
 import com.kiraz.messengerapp.dto.*;
+import com.kiraz.messengerapp.service.AccountService;
 import com.kiraz.messengerapp.service.JwtTokenService;
 import com.kiraz.messengerapp.service.UserService;
 import jakarta.validation.Valid;
@@ -19,13 +21,16 @@ import org.springframework.web.server.ResponseStatusException;
 @CrossOrigin(origins = {"http://localhost:3000"})
 public class AuthController {
     private UserService userService;
+    private AccountService accountService;
     private AuthenticationManager authenticationManager;
     private JwtTokenService jwtTokenService;
 
-    public AuthController(UserService userService, AuthenticationManager authenticationManager, JwtTokenService jwtTokenService) {
+    public AuthController(UserService userService, AuthenticationManager authenticationManager,
+                          JwtTokenService jwtTokenService, AccountService accountService) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.jwtTokenService = jwtTokenService;
+        this.accountService = accountService;
     }
     @PostMapping("/save")
     public ResponseEntity<UserDTO> saveUser(@Valid @RequestBody UserDTO user) {
@@ -38,12 +43,13 @@ public class AuthController {
     }
 
     @PostMapping("/saveSilent")
-    public ResponseEntity<UserRegisterOAuth2Response> saveUserSilent(@Valid @RequestBody UserRegisterOAuth2Request request) {
-        System.out.println("çalıştım");
-        UserRegisterOAuth2Response response = userService.saveUserSilent(request);
-        if(response != null) {
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } else {
+    public ResponseEntity<String> saveUserSilent(@JsonArg("token") TokenDTO tokenDTO,
+                                                                     @JsonArg("account") AccountDTO account, @JsonArg("profile") ProfileDTO profileDTO) {
+        try {
+            AccountDTO accountDTO = accountService.saveAccount(account);
+            ProfileDTO profileDTO1 = userService.saveUserByProfile(profileDTO);
+            return new ResponseEntity<>("success", HttpStatus.OK);
+        } catch (Exception ex) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

@@ -11,12 +11,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableMethodSecurity
-public class SecurityConfig{
+public class SecurityConfig implements WebMvcConfigurer {
 
     private JwtRequestFilter jwtRequestFilter;
 
@@ -45,4 +49,9 @@ public class SecurityConfig{
         return configuration.getAuthenticationManager();
     }
 
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        JsonArgumentResolver jsonArgumentResolver = new JsonArgumentResolver();
+        resolvers.add(jsonArgumentResolver);
+    }
 }

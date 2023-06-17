@@ -34,7 +34,7 @@ public class User {
     private String email;
 
     @Column
-    private Date emailVerified;
+    private Instant emailVerified;
 
     @Column
     private String image;

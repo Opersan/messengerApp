@@ -1,10 +1,7 @@
 package com.kiraz.messengerapp.service;
 
-import com.kiraz.messengerapp.dto.UserDTO;
+import com.kiraz.messengerapp.dto.*;
 import com.kiraz.messengerapp.converter.UserConverter;
-import com.kiraz.messengerapp.dto.JwtUserDetails;
-import com.kiraz.messengerapp.dto.UserRegisterOAuth2Request;
-import com.kiraz.messengerapp.dto.UserRegisterOAuth2Response;
 import com.kiraz.messengerapp.model.User;
 import com.kiraz.messengerapp.repository.UserRepository;
 import org.springframework.context.annotation.Lazy;
@@ -39,15 +36,20 @@ public class UserService implements UserDetailsService {
     }
 
     public UserDTO saveUser(UserDTO user) {
-        User newUser = UserConverter.userDTOtoUserConverter(user);
+        User newUser = UserConverter.convertUserDTOtoUserConverter(user);
         newUser.setHashedPassword(passwordEncoder.encode(user.getPassword()));
-        return UserConverter.userDTOtoUserConverter(userRepository.save(newUser));
+        return UserConverter.convertUserDTOtoUserConverter(userRepository.save(newUser));
+    }
+
+    public ProfileDTO saveUserByProfile(ProfileDTO profileDTO) {
+        User newUser = UserConverter.convertProfileToUser(profileDTO);
+        return UserConverter.convertUserToProfileDTO(newUser);
     }
 
     public UserRegisterOAuth2Response saveUserSilent(UserRegisterOAuth2Request user) {
-        User newUser = UserConverter.userRegisterRequestToUserConverter(user);
+        User newUser = UserConverter.convertUserRegisterRequestToUserConverter(user);
         newUser.setHashedPassword(passwordEncoder.encode(user.getPassword()));
-        return UserConverter.userToUserRegisterResponseConverter(userRepository.save(newUser));
+        return UserConverter.convertUserToUserRegisterResponseConverter(userRepository.save(newUser));
     }
 
     @Override

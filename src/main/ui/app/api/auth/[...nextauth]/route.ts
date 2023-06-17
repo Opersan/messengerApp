@@ -21,7 +21,7 @@ export const authOptions: AuthOptions = {
             console.log("Objects: ");
             console.log({objects: [token, account, profile]});
             console.log("Bitti");
-            axios.post(`${MESSENGER_API_URL}` + '/api/user/saveSilent', {objects: [token, account, profile]})
+            axios.post(`${MESSENGER_API_URL}` + '/api/user/saveSilent', {token: token, account: account, profile: profile})
                 .then(function (response){
                 }).catch((error) => {
                     if (error == 403) console.log("403 hatası");
