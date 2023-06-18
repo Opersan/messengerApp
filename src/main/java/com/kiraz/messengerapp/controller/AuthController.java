@@ -19,7 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/auth")
 @CrossOrigin(origins = {"http://localhost:3000"})
 public class AuthController {
 
@@ -47,7 +47,7 @@ public class AuthController {
     }
 
     @PostMapping("/loginWithPwd")
-    public UserLoginResponse loginWithPwd(@Valid @RequestBody UserLoginRequest user) {
+    public UserLoginRequest loginWithPwd(@Valid @RequestBody UserLoginRequest user) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
@@ -61,17 +61,18 @@ public class AuthController {
         final UserLoginResponse userLoginResponse = new UserLoginResponse();
         userLoginResponse.setAccessToken(jwtTokenService.generateToken(userDetails));
 
-        return userLoginResponse;
+        //todo response düzelt
+        return user;
     }
 
     @PostMapping("/loginWithOAuth2")
-    public UserLoginResponse loginWithGoogle(@JsonArg("token") TokenDTO tokenDTO,
-                                             @JsonArg("account") AccountDTO account, @JsonArg("profile") ProfileDTO profileDTO) {
+    public UserLoginResponse loginWithGoogle(@JsonArg("account") AccountDTO account,
+                                             @JsonArg("profile") ProfileDTO profileDTO) {
         try {
             if (userService.getUserByEmail(profileDTO.getEmail()).isEmpty()) {
                 userService.saveUserByProfile(profileDTO, account);
             } else {
-                userService.updateUserByProfile(profileDTO, account);
+                userService.updateUserByProfile(profileDTO);
             }
             if (accountService.getAccountByProviderId(account.getProviderAccountId()).isEmpty()) {
                 accountService.saveAccountByAccountDTO(account);

@@ -1,15 +1,37 @@
 package com.kiraz.messengerapp.converter;
 
-import com.kiraz.messengerapp.dto.ProfileDTO;
-import com.kiraz.messengerapp.dto.UserDTO;
-import com.kiraz.messengerapp.dto.UserRegisterOAuth2Request;
-import com.kiraz.messengerapp.dto.UserRegisterOAuth2Response;
+import com.kiraz.messengerapp.dto.*;
 import com.kiraz.messengerapp.model.User;
 import com.kiraz.messengerapp.utils.DateUtils;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserConverter {
+
+    public static UserDTO convertUserToUserDTO(User user){
+        UserDTO userDTO = new UserDTO();
+        userDTO.setName(user.getName());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setImage(user.getImage());
+
+        return userDTO;
+    }
+
+    public static List<UserDTO> convertUserToUserDTOList(List<User> users){
+        List<UserDTO> usersDTOList = new ArrayList<>();
+        for (User user: users) {
+            UserDTO userDTO = new UserDTO();
+            userDTO.setId(user.getId());
+            userDTO.setName(user.getName());
+            userDTO.setEmail(user.getEmail());
+            userDTO.setImage(user.getImage());
+            usersDTOList.add(userDTO);
+        }
+
+        return usersDTOList;
+    }
     public static User convertUserDTOtoUserConverter(UserDTO userDTO){
         User user = new User();
         user.setName(userDTO.getName());

@@ -13,6 +13,8 @@ import lombok.Setter;
 @Setter
 public class UserDTO {
 
+    private long id;
+
     @NotNull
     @NotBlank
     private String name;
@@ -24,4 +26,6 @@ public class UserDTO {
     @NotNull
     @NotBlank
     private String password;
+
+    private String image;
 }

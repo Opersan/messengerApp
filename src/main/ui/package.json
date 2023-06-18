@@ -9,6 +9,7 @@
     "lint": "../ui/node_modules/.bin/next lint"
   },
   "dependencies": {
+    "@prisma/client": "^4.15.0",
     "@tailwindcss/forms": "^0.5.3",
     "@types/node": "20.3.1",
     "@types/react": "18.2.12",
@@ -21,6 +22,7 @@
     "http-proxy-middleware": "^2.0.6",
     "next": "13.4.5",
     "next-auth": "^4.22.1",
+    "next-superjson-plugin": "^0.5.8",
     "postcss": "8.4.24",
     "react": "18.2.0",
     "react-dom": "18.2.0",

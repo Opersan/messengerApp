@@ -3,6 +3,7 @@ package com.kiraz.messengerapp.service;
 import com.kiraz.messengerapp.converter.AccountConverter;
 import com.kiraz.messengerapp.dto.*;
 import com.kiraz.messengerapp.converter.UserConverter;
+import com.kiraz.messengerapp.model.Account;
 import com.kiraz.messengerapp.model.User;
 import com.kiraz.messengerapp.repository.UserRepository;
 import org.springframework.context.annotation.Lazy;
@@ -33,6 +34,11 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
+    public List<User> getAllUsersExceptItself(String email){
+        List<User> users = userRepository.findAllByEmailNot(email);
+        return users;
+    }
+
     public Optional<User> getUser(Long id) {
         return userRepository.findById(id);
     }
@@ -53,14 +59,13 @@ public class UserService implements UserDetailsService {
         return UserConverter.convertUserToProfileDTO(userRepository.save(newUser));
     }
 
-    public void updateUserByProfile(ProfileDTO profileDTO, AccountDTO accountDTO) {
+    public void updateUserByProfile(ProfileDTO profileDTO) {
         User updatedUser = userRepository.findByEmail(profileDTO.getEmail()).get();
 
         updatedUser.setName(profileDTO.getName());
         updatedUser.setEmail(profileDTO.getEmail());
         updatedUser.setImage(profileDTO.getPicture());
         updatedUser.setCreatedAt(Instant.ofEpochMilli(profileDTO.getIat()));
-        updatedUser.setAccount(AccountConverter.convertAccountDTOtoAccount(accountDTO));
 
         userRepository.save(updatedUser);
     }

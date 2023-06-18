@@ -19,6 +19,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 public class User {
 
     @Id
@@ -60,10 +61,10 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "message_id", referencedColumnName = "id"))
     private List<Message> seenMessages;
 
-    @OneToOne(cascade = {CascadeType.ALL})
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
 
-    @OneToMany(mappedBy = "senderUser")
+    @OneToMany(mappedBy = "senderUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Message> messages;
 }

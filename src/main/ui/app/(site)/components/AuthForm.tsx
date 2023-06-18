@@ -1,5 +1,5 @@
 'use client';
-import {useCallback, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {FieldValues,
         SubmitHandler,
         useForm} from "react-hook-form";
@@ -9,15 +9,24 @@ import AuthSocialButton from "@/app/(site)/components/AuthSocialButton";
 import {BsGithub, BsGoogle} from "react-icons/bs";
 import axios from "axios";
 import toast from "react-hot-toast";
-import {signIn} from "next-auth/react";
+import {signIn, useSession} from "next-auth/react";
+import {useRouter} from "next/navigation";
 
 type Variant = 'LOGIN' | 'REGISTER';
 const MESSENGER_API_URL = "http://localhost:8080";
 let access_token;
 
 const AuthForm = () => {
+  const session = useSession();
+  const router = useRouter();
   const [variant, setVariant] = useState<Variant>('LOGIN');
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (session?.status === 'authenticated') {
+      router.push("/users");
+    }
+  }, [session?.status, router]);
 
   const toggleVariant = useCallback(() => {
     if (variant === 'LOGIN') {
@@ -45,19 +54,24 @@ const AuthForm = () => {
     setIsLoading(true);
 
     if(variant === 'REGISTER') {
-      axios.post(`${MESSENGER_API_URL}` + '/api/user/save', data)
-          .catch(() => toast.error('Something went wrong!'))
+      axios.post(process.env.SPRING_API_URL + '/api/auth/save', data)
+          .then(() =>{
+            signIn('credentials', data)
+          })
+          .catch(() => {
+            toast.error('Something went wrong!');
+          })
           .finally(() => setIsLoading(false));
     }
     if (variant === 'LOGIN') {
-      axios.post(`${MESSENGER_API_URL}` + '/api/user/loginWithPwd', data)
-          .then(function (response) {
-            access_token = response.data.accessToken;
-            toast.success('Logged-in successfully');
-          })
-          .catch(function (error) {
-            if (error.response.status === 403) {
+      signIn('credentials', {...data, redirect: false})
+          .then((callback) => {
+            if (callback?.error) {
               toast.error('Invalid credentials');
+            }
+            if (callback?.ok && !callback?.error) {
+              toast.success('Logged-in successfully');
+              router.push("/users");
             }
           }).finally(() => setIsLoading(false));
     }
@@ -68,10 +82,6 @@ const AuthForm = () => {
 
     signIn(action, {redirect: false})
         .then((callback) => {
-          console.log("Error:" + callback?.error);
-          console.log("Status:" + callback?.status);
-          console.log("Ok:" + callback?.ok);
-          console.log("URL:" + callback?.url);
           if (callback?.error) {
             toast.error('Invalid credentials');
           }

@@ -5,8 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.Cascade;
 
 import java.sql.Date;
 import java.util.List;
@@ -37,10 +36,11 @@ public class Message {
 
     @ManyToOne()
     @JoinColumn(name = "conversation_id")
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     private Conversation conversation;
 
     @ManyToOne()
     @JoinColumn(name = "user_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     private User senderUser;
 }
