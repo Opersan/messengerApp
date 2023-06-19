@@ -6,16 +6,18 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 public class ConversationDTO {
     private long id;
-    private Date createdAt;
+    private Instant createdAt;
     private Date lastMessageAt;
     private String name;
     private Boolean isGroup;
     private List<Message> messages;
-    private List<User> users;
+    private Set<User> users;
 }

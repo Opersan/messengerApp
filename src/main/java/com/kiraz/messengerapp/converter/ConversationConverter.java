@@ -6,7 +6,9 @@ import com.kiraz.messengerapp.model.Conversation;
 import com.kiraz.messengerapp.model.User;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ConversationConverter {
     public static List<ConversationDTO> convertConversationToConversationDTOList(List<Conversation> conversations){
@@ -39,5 +41,22 @@ public class ConversationConverter {
         conversationDTO.setMessages(conversation.getMessages());
         conversationDTO.setUsers(conversation.getUsers());
         return conversationDTO;
+    }
+
+    public static Set<ConversationDTO> convertConversationSetToConversationDTOSetConverter(Set<Conversation> conversations){
+        Set<ConversationDTO> conversationDTOS = new HashSet<>();
+        for (Conversation conversation: conversations) {
+            ConversationDTO conversationDTO = new ConversationDTO();
+            conversationDTO.setId(conversation.getId());
+            conversationDTO.setCreatedAt(conversation.getCreatedAt());
+            conversationDTO.setLastMessageAt(conversation.getLastMessageAt());
+            conversationDTO.setName(conversation.getName());
+            conversationDTO.setIsGroup(conversation.getIsGroup());
+            conversationDTO.setMessages(conversation.getMessages());
+            conversationDTO.setUsers(conversation.getUsers());
+            conversationDTOS.add(conversationDTO);
+        }
+
+        return conversationDTOS;
     }
 }

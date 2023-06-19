@@ -1,14 +1,21 @@
 package com.kiraz.messengerapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.sql.Date;
+import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "conversations")
@@ -23,7 +30,8 @@ public class Conversation {
     private Long id;
 
     @Column
-    private Date createdAt;
+    @CreationTimestamp
+    private Instant createdAt;
 
     @Column
     private Date lastMessageAt;
@@ -37,9 +45,16 @@ public class Conversation {
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Message> messages;
 
+    // Child of User
     @ManyToMany(mappedBy = "conversations")
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE,
             org.hibernate.annotations.CascadeType.MERGE,
             org.hibernate.annotations.CascadeType.PERSIST})
-    private List<User> users;
+    @JsonIgnore
+    private Set<User> users = new HashSet<>();
+
+    public void addUser(User user) {
+        this.users.add(user);
+        user.getConversations().add(this);
+    }
 }

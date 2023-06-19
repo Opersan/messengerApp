@@ -1,13 +1,7 @@
 'use client';
 
 import UserBox from "@/app/users/components/UserBox";
-
-interface User {
-    id?: string,
-    name?: string,
-    email?: string,
-    image?: string
-}
+import {User} from "@/app/types";
 
 interface UserListProps {
     items: User[]

@@ -1,13 +1,7 @@
 'use client';
 
 import Image from "next/image";
-
-interface User {
-    id?: string,
-    name?: string,
-    email?: string,
-    image?: string
-}
+import {User} from "@/app/types";
 
 interface AvatarProps {
     user?: User;

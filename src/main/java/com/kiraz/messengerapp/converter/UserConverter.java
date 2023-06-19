@@ -6,12 +6,15 @@ import com.kiraz.messengerapp.utils.DateUtils;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class UserConverter {
 
     public static UserDTO convertUserToUserDTO(User user){
         UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
         userDTO.setName(user.getName());
         userDTO.setEmail(user.getEmail());
         userDTO.setImage(user.getImage());
@@ -31,6 +34,19 @@ public class UserConverter {
         }
 
         return usersDTOList;
+    }
+
+    public static Set<User> convertUserDTOListToUserList(Set<UserDTO> userDTOList) {
+        Set<User> userList = new HashSet<>();
+        for (UserDTO userDTO: userDTOList) {
+            User user = new User();
+            user.setName(userDTO.getName());
+            user.setEmail(userDTO.getEmail());
+            user.setImage(userDTO.getImage());
+            userList.add(user);
+        }
+
+        return userList;
     }
     public static User convertUserDTOtoUserConverter(UserDTO userDTO){
         User user = new User();

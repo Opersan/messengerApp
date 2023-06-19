@@ -1,17 +1,10 @@
 "use client";
 
-import useRoutes from "@/app/hooks/useRoutes";
 import {useRouter} from "next/navigation";
 import {useCallback, useState} from "react";
 import axios from "axios";
 import Avatar from "@/app/(site)/components/Avatar";
-
-interface User {
-    id?: string,
-    name?: string,
-    email?: string,
-    image?: string
-}
+import {User} from "@/app/types";
 
 interface UserBoxProps {
     data: User
@@ -22,10 +15,10 @@ const UserBox: React.FC<UserBoxProps> = ({
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleClick = useCallback(() => {
+    const handleClick = useCallback(async () => {
         setIsLoading(true);
 
-        axios.post('/api/conversations/conversation', {
+        const answer = await axios.post('/api/conversations', {
             userId: data.id
         }).then((data) => {
             router.push(`/conversations/${data.data.id}`);

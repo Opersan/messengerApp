@@ -1,5 +1,6 @@
 package com.kiraz.messengerapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +9,9 @@ import lombok.Setter;
 import org.hibernate.annotations.Cascade;
 
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "messages")
@@ -32,7 +35,8 @@ public class Message {
     private Date createdAt;
 
     @ManyToMany(mappedBy = "seenMessages")
-    private List<User> seenUsers;
+    @JsonIgnore
+    private Set<User> seenUsers = new HashSet<>();
 
     @ManyToOne()
     @JoinColumn(name = "conversation_id")

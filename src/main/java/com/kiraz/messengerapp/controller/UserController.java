@@ -37,8 +37,17 @@ public class UserController {
         return users;
     }
 
+    public User getUserById( Long id) {
+        Optional<User> user = userService.getUser(id);
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
     @GetMapping("/userById")
-    public UserDTO getUserById(@RequestParam(value="id") Long id) {
+    public UserDTO getUserDTOById(@RequestParam(value="id") Long id) {
         Optional<User> user = userService.getUser(id);
         if (user.isPresent()) {
             return UserConverter.convertUserToUserDTO(user.get());

@@ -3,13 +3,7 @@ import useRoutes from "@/app/hooks/useRoutes";
 import React, {useState} from "react";
 import DesktopItem from "@/app/components/sidebar/DesktopItem";
 import Avatar from "@/app/(site)/components/Avatar";
-
-interface User {
-    id?: string,
-    name?: string,
-    email?: string,
-    image?: string
-}
+import {User} from "@/app/types";
 
 interface DesktopSidebarProps {
     currentUser: User
