@@ -2,11 +2,9 @@ package com.kiraz.messengerapp.controller;
 
 import com.kiraz.messengerapp.converter.UserConverter;
 import com.kiraz.messengerapp.dto.UserDTO;
-import com.kiraz.messengerapp.dto.UserLoginResponse;
 import com.kiraz.messengerapp.model.User;
 import com.kiraz.messengerapp.service.UserService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -41,7 +39,6 @@ public class UserController {
 
     @GetMapping("/userById")
     public UserDTO getUserById(@RequestParam(value="id") Long id) {
-        System.out.println("Id: " + id);
         Optional<User> user = userService.getUser(id);
         if (user.isPresent()) {
             return UserConverter.convertUserToUserDTO(user.get());

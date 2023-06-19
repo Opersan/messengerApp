@@ -50,7 +50,7 @@ public class UserService implements UserDetailsService {
     public UserDTO saveUser(UserDTO user) {
         User newUser = UserConverter.convertUserDTOtoUserConverter(user);
         newUser.setHashedPassword(passwordEncoder.encode(user.getPassword()));
-        return UserConverter.convertUserDTOtoUserConverter(userRepository.save(newUser));
+        return UserConverter.convertUsertoUserDTOConverter(userRepository.save(newUser));
     }
 
     public ProfileDTO saveUserByProfile(ProfileDTO profileDTO, AccountDTO accountDTO) {

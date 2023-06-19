@@ -40,7 +40,7 @@ public class UserConverter {
         return user;
     }
 
-    public static UserDTO convertUserDTOtoUserConverter(User user){
+    public static UserDTO convertUsertoUserDTOConverter(User user){
         UserDTO userDTO = new UserDTO();
         userDTO.setName(user.getName());
         userDTO.setEmail(user.getEmail());

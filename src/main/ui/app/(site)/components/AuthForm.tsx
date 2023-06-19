@@ -54,7 +54,8 @@ const AuthForm = () => {
     setIsLoading(true);
 
     if(variant === 'REGISTER') {
-      axios.post(process.env.SPRING_API_URL + '/api/auth/save', data)
+      //todo Buradaki URL için client-side env file oluştur
+      axios.post('http://localhost:8080' + '/api/auth/save', data)
           .then(() =>{
             signIn('credentials', data)
           })
