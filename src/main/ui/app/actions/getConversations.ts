@@ -9,7 +9,7 @@ const getConversations =  async () => {
     }
 
     try {
-        const conversations =  await axios.get('http://localhost:8080' + '/api/conversations/conversationByUserId', {
+        const conversations =  await axios.get('http://localhost:8080' + '/api/conversations/allConversationsByUserId', {
             params: {id: currentUser.id}
         });
 

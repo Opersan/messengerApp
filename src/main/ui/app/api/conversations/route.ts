@@ -23,22 +23,23 @@ export async function POST(
             return new NextResponse('Invalid Data', {status: 400});
         }
 
-        /*
+
         if (isGroup) {
             // todo spring api call ile yeni group conversation(members) oluştur
             const newConversation = "";
             return NextResponse.json(newConversation);
         }
-
-        const existingConversations = await axios.post(process.env.SPRING_API_URL + '/api/conversations/conversationByUserID', {
-            userId: currentUser.id
+        const existingConversations = await axios.get(process.env.SPRING_API_URL + '/api/conversations/conversationByUserId', {
+            params: {
+                senderId: currentUser.id,
+                receiverId: userId
+            }
         });
-        const singleConversation = existingConversations.data[0];
+        const singleConversation = existingConversations.data;
 
         if (singleConversation) {
             return NextResponse.json(singleConversation);
         }
-         */
 
         const newConversation = await axios.post('http://localhost:8080' + '/api/conversations/createConversation', {
             senderUser: {

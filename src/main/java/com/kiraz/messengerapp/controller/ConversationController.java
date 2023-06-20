@@ -38,7 +38,7 @@ public class ConversationController {
     }
 
     @GetMapping("/conversationById")
-    public ConversationDTO getConversationById(@RequestParam Long id) {
+    public ConversationDTO getConversationById(@RequestParam(value = "conversationId") Long id) {
         Optional<Conversation> conversation = conversationService.getConversation(id);
         if (conversation.isPresent()) {
             return ConversationConverter.convertConversationToConversationDTOConverter(conversation.get());
@@ -48,9 +48,18 @@ public class ConversationController {
     }
 
     @GetMapping("/conversationByUserId")
-    public Set<ConversationDTO> getConversationByUserId(@RequestParam Long id) {
+    public ConversationDTO getConversationByUserId(@RequestParam(value = "senderId") Long id1, @RequestParam(value = "receiverId") Long id2) {
+        User user1 = userController.getUserById(id1);
+        User user2 = userController.getUserById(id2);
+        Optional<Conversation> conversation = conversationService.getConversationByUser(user1, user2);
+        return conversation.isPresent() ?
+                ConversationConverter.convertConversationToConversationDTOConverter(conversation.get()) : null;
+    }
+
+    @GetMapping("/allConversationsByUserId")
+    public Set<ConversationDTO> getAllConversationByUserId(@RequestParam Long id) {
         User user = userController.getUserById(id);
-        Set<Conversation> conversations = conversationService.getConversationByUser(user);
+        Set<Conversation> conversations = conversationService.getAllConversationByUser(user);
         if (!conversations.isEmpty()) {
             return ConversationConverter.convertConversationSetToConversationDTOSetConverter(conversations);
         } else {

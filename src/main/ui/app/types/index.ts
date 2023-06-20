@@ -1,3 +1,5 @@
+import {DateTime} from "next-auth/providers/kakao";
+
 export type User = {
     id?: string,
     name?: string,
@@ -9,7 +11,7 @@ export type Message = {
     id?: string,
     body?: string,
     image?: string,
-    createdAt?: Date,
+    createdAt: DateTime,
 
     seenUsers?: User[],
     conversation?: Conversation,

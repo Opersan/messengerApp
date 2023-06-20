@@ -1,5 +1,6 @@
 package com.kiraz.messengerapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -50,5 +51,6 @@ public class Account {
     private String session_state;
 
     @OneToOne(mappedBy = "account")
+    @JsonIgnore
     private User user;
 }

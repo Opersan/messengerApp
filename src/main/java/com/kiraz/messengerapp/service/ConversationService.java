@@ -5,10 +5,11 @@ import com.kiraz.messengerapp.model.User;
 import com.kiraz.messengerapp.repository.ConversationRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ConversationService {
@@ -27,7 +28,15 @@ public class ConversationService {
         return conversationRepository.findById(id);
     }
 
-    public Set<Conversation> getConversationByUser(User user){
+    public Optional<Conversation> getConversationByUser(User user1, User user2){
+        Set<User> users = new HashSet<>();
+        users.add(user1);
+        users.add(user2);
+        List<Conversation> conversation = conversationRepository.findAll();
+        return conversation.stream().filter(e -> e.getUsers().containsAll(users)).findAny();
+    }
+
+    public Set<Conversation> getAllConversationByUser(User user){
         return user.getConversations();
     }
 
