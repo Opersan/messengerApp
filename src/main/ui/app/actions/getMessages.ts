@@ -9,6 +9,7 @@ const getMessages = async (
                 conversationId: conversationId
             }
         }); // conversationId'ye sahip hepsini al createdAt asc
+        console.log(messages.data)
         return messages.data;
     } catch (error: any) {
         return [];

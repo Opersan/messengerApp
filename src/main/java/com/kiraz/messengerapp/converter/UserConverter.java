@@ -60,6 +60,7 @@ public class UserConverter {
         UserDTO userDTO = new UserDTO();
         userDTO.setName(user.getName());
         userDTO.setEmail(user.getEmail());
+        userDTO.setImage(user.getImage());
         userDTO.setPassword(user.getHashedPassword());
         return userDTO;
     }

@@ -5,16 +5,17 @@ export type User = {
     name?: string,
     email?: string,
     image?: string
+    createdAt: DateTime
 }
 
 export type Message = {
     id?: string,
     body?: string,
     image?: string,
-    createdAt: DateTime,
+    createdAt: Date,
     seenUsers?: User[],
     conversation?: Conversation,
-    sender?: User
+    senderUser?: User
 }
 
 export type Conversation = {
@@ -23,7 +24,6 @@ export type Conversation = {
     isGroup?: boolean
 
     messages?: Message[]
-
     users: User[]
 }
 

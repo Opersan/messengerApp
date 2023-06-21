@@ -1,5 +1,6 @@
 package com.kiraz.messengerapp.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -38,19 +39,19 @@ public class Message {
     private Instant createdAt;
 
     @ManyToMany(mappedBy = "seenMessages")
-    @JsonIgnore
+    @JsonBackReference
     private Set<User> seenUsers = new HashSet<>();
 
     @ManyToOne()
     @JoinColumn(name = "conversation_id")
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
-    @JsonIgnore
+    @JsonBackReference
     private Conversation conversation;
 
     @ManyToOne()
     @JoinColumn(name = "user_id")
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
-    @JsonIgnore
+    @JsonBackReference
     private User senderUser;
 
     public void addSeenUser(User user) {

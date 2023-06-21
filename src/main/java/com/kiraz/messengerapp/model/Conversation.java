@@ -1,6 +1,8 @@
 package com.kiraz.messengerapp.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
@@ -42,6 +44,7 @@ public class Conversation {
     private Boolean isGroup;
 
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Message> messages;
 
     // Child of User
@@ -49,7 +52,7 @@ public class Conversation {
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE,
             org.hibernate.annotations.CascadeType.MERGE,
             org.hibernate.annotations.CascadeType.PERSIST})
-    @JsonIgnore
+    @JsonBackReference
     private Set<User> users = new HashSet<>();
 
     public void addUser(User user) {

@@ -6,6 +6,7 @@ import clsx from "clsx";
 import Avatar from "@/app/(site)/components/Avatar";
 import {format} from "date-fns";
 import Image from "next/image";
+import {compileNonPath} from "next/dist/shared/lib/router/utils/prepare-destination";
 
 interface MessageBoxProps {
     data: Message,
@@ -18,9 +19,9 @@ const MessageBox: React.FC<MessageBoxProps> = ({
 }) => {
     const session = useSession();
 
-    const isOwn = session?.data?.user?.email === data?.sender?.email;
+    const isOwn = session?.data?.user?.email === data?.senderUser?.email;
     const seenList = (data.seenUsers || [])
-    .filter((user) => user.email != data?.sender?.email)
+    .filter((user) => user.email != data?.senderUser?.email)
     .map((user) => user.name)
     .join(', ');
 
@@ -35,12 +36,12 @@ const MessageBox: React.FC<MessageBoxProps> = ({
     return (
         <div className={container}>
             <div className={avatar}>
-                <Avatar user={data.sender}/>
+                <Avatar user={data.senderUser}/>
             </div>
             <div className={body}>
                 <div className="flex items-center gap-1">
                     <div className="text-sm text-gray-500">
-                        {data.sender?.name}
+                        {data.senderUser?.name}
                     </div>
                     <div className="text-xs text-gray-400">
                         {/* todo buraya data.createdAt ekle */}
