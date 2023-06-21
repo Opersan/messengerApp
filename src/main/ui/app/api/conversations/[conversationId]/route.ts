@@ -30,7 +30,7 @@ export async function DELETE(
             return new NextResponse('Invalid ID!', {status: 400});
         }
 
-        return NextResponse.json(existingConversation);
+        return NextResponse.json(existingConversation.data);
 
     } catch (error: any) {
         console.log(error, 'ERROR_CONVERSATION_DELETE');

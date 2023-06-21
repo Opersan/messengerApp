@@ -18,6 +18,6 @@ public class ConversationDTO {
     private Instant lastMessageAt;
     private String name;
     private Boolean isGroup;
-    private List<Message> messages;
+    private Set<Message> messages;
     private Set<User> users;
 }

@@ -81,7 +81,7 @@ public class User {
     // yoksa rest data eksik gidiyor.
     @OneToMany(mappedBy = "senderUser", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<Message> messages;
+    private Set<Message> messages;
 
     public void addConversation(Conversation conversation) {
         this.conversations.add(conversation);

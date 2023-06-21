@@ -42,7 +42,7 @@ public class Message {
     @JsonBackReference
     private Set<User> seenUsers = new HashSet<>();
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "conversation_id")
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JsonBackReference
@@ -57,5 +57,12 @@ public class Message {
     public void addSeenUser(User user) {
         this.seenUsers.add(user);
         user.getSeenMessages().add(this);
+    }
+
+    public void removeSeenUsers(Set<User> user){
+        this.seenUsers.removeAll(user);
+        for (User seenUser: user) {
+            seenUser.getSeenMessages().remove(this);
+        }
     }
 }

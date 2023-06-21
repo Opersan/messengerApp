@@ -74,7 +74,7 @@ public class UserService implements UserDetailsService {
         User updatedUser = userRepository.findByEmail(request.getEmail()).get();
 
         updatedUser.setName(!request.getName().isEmpty() ? request.getName() : updatedUser.getName());
-        updatedUser.setImage(!request.getImage().isEmpty() ? request.getName() : updatedUser.getName());
+        updatedUser.setImage(!request.getImage().isEmpty() ? request.getImage() : updatedUser.getImage());
 
         return userRepository.save(updatedUser);
     }

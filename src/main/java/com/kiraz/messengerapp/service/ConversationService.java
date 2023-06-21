@@ -1,6 +1,7 @@
 package com.kiraz.messengerapp.service;
 
 import com.kiraz.messengerapp.model.Conversation;
+import com.kiraz.messengerapp.model.Message;
 import com.kiraz.messengerapp.model.User;
 import com.kiraz.messengerapp.repository.ConversationRepository;
 import org.springframework.http.HttpStatus;
@@ -69,6 +70,11 @@ public class ConversationService {
     public Conversation deleteConversation(Long id, User user) {
         Optional<Conversation> conversation = conversationRepository.findById(id);
         if (conversation.get().getUsers().contains(user)) {
+            for (Message message: conversation.get().getMessages()) {
+                    message.removeSeenUsers(message.getSeenUsers());
+            }
+            conversation.get().deleteMessages();
+            conversation.get().deleteUsers();
             conversationRepository.deleteById(id);
         } else throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         return conversation.get();

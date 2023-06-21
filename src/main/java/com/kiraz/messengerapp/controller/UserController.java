@@ -51,6 +51,7 @@ public class UserController {
 
     @PutMapping("/updateUser")
     public UserDTO updateUserInfo(@RequestBody UserUpdateRequest request) {
+        System.out.println(request.getName());
         UserDTO user = UserConverter.convertUsertoUserDTO(userService.updateUserByUserDTO(request));
         return user;
     }

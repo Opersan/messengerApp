@@ -56,7 +56,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         axios.post('/api/settings', data)
             .then(() => {
                 router.refresh();
-                onClose;
+                onClose();
             })
             .catch(() => toast.error('Something went wrong!'))
             .finally(() => setIsLoading(false));

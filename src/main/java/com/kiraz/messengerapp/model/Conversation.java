@@ -45,7 +45,7 @@ public class Conversation {
 
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<Message> messages;
+    private Set<Message> messages;
 
     // Child of User
     @ManyToMany(mappedBy = "conversations")
@@ -58,5 +58,19 @@ public class Conversation {
     public void addUser(User user) {
         this.users.add(user);
         user.getConversations().add(this);
+    }
+
+    public void deleteMessages() {
+        for (Message message: messages) {
+            message.setConversation(null);
+        }
+        messages.removeAll(this.messages);
+    }
+
+    public void deleteUsers() {
+        for (User user: users) {
+            user.getConversations().remove(this);
+        }
+        users.removeAll(users);
     }
 }
