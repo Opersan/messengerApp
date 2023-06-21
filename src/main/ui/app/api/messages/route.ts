@@ -18,17 +18,17 @@ export async function POST(
             return new NextResponse('Unauthorized', {status: 401});
         }
 
-        const newMessage = await axios.post(process.env.SPRING_API_URL + '/api/message/createMessage', {
+        const newMessage = await axios.post(process.env.SPRING_API_URL + '/api/messages/createMessage', {
             body: message,
             image: image,
-            conversation: conversationId,
-            sender: currentUser.id,
-            seen: currentUser.id
+            conversationId: conversationId,
+            senderUserId: currentUser.id,
+            seenUserId: currentUser.id
             //todo lastMessageAt değerini de güncelle
         });
 
-        const updatedConversation = await axios.post('/api/conversations', {
-            userId: currentUser.id
+        const updatedConversation = await axios.put(process.env.SPRING_API_URL + '/api/conversations/updateConversation', {
+            conversationId: conversationId
         });
 
         return NextResponse.json(newMessage.data);

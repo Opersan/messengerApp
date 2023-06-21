@@ -12,7 +12,6 @@ export type Message = {
     body?: string,
     image?: string,
     createdAt: DateTime,
-
     seenUsers?: User[],
     conversation?: Conversation,
     sender?: User

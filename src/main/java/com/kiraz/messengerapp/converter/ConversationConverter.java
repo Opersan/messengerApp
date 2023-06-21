@@ -1,9 +1,7 @@
 package com.kiraz.messengerapp.converter;
 
 import com.kiraz.messengerapp.dto.ConversationDTO;
-import com.kiraz.messengerapp.dto.UserDTO;
 import com.kiraz.messengerapp.model.Conversation;
-import com.kiraz.messengerapp.model.User;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,12 +12,12 @@ public class ConversationConverter {
     public static List<ConversationDTO> convertConversationToConversationDTOList(List<Conversation> conversations){
         List<ConversationDTO> conversationDTOList = new ArrayList<>();
         for (Conversation conversation: conversations) {
-            conversationDTOList.add(convertConversationToConversationDTOConverter(conversation));
+            conversationDTOList.add(convertConversationToConversationDTO(conversation));
         }
 
         return conversationDTOList;
     }
-    public static Conversation convertConversationDTOToConversationConverter(ConversationDTO conversationDTO){
+    public static Conversation convertConversationDTOToConversation(ConversationDTO conversationDTO){
         Conversation conversation = new Conversation();
         conversation.setId(conversationDTO.getId());
         conversation.setCreatedAt(conversationDTO.getCreatedAt());
@@ -31,7 +29,7 @@ public class ConversationConverter {
         return conversation;
     }
 
-    public static ConversationDTO convertConversationToConversationDTOConverter(Conversation conversation){
+    public static ConversationDTO convertConversationToConversationDTO(Conversation conversation){
         ConversationDTO conversationDTO = new ConversationDTO();
         conversationDTO.setId(conversation.getId());
         conversationDTO.setCreatedAt(conversation.getCreatedAt());
@@ -43,7 +41,7 @@ public class ConversationConverter {
         return conversationDTO;
     }
 
-    public static Set<ConversationDTO> convertConversationSetToConversationDTOSetConverter(Set<Conversation> conversations){
+    public static Set<ConversationDTO> convertConversationSetToConversationDTOSet(Set<Conversation> conversations){
         Set<ConversationDTO> conversationDTOS = new HashSet<>();
         for (Conversation conversation: conversations) {
             ConversationDTO conversationDTO = new ConversationDTO();

@@ -22,8 +22,8 @@ public class UserConverter {
         return userDTO;
     }
 
-    public static List<UserDTO> convertUserToUserDTOList(List<User> users){
-        List<UserDTO> usersDTOList = new ArrayList<>();
+    public static Set<UserDTO> convertUserListToUserDTOList(Set<User> users){
+        Set<UserDTO> usersDTOList = new HashSet<>();
         for (User user: users) {
             UserDTO userDTO = new UserDTO();
             userDTO.setId(user.getId());
@@ -48,7 +48,7 @@ public class UserConverter {
 
         return userList;
     }
-    public static User convertUserDTOtoUserConverter(UserDTO userDTO){
+    public static User convertUserDTOtoUser(UserDTO userDTO){
         User user = new User();
         user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
@@ -56,7 +56,7 @@ public class UserConverter {
         return user;
     }
 
-    public static UserDTO convertUsertoUserDTOConverter(User user){
+    public static UserDTO convertUsertoUserDTO(User user){
         UserDTO userDTO = new UserDTO();
         userDTO.setName(user.getName());
         userDTO.setEmail(user.getEmail());
@@ -64,7 +64,7 @@ public class UserConverter {
         return userDTO;
     }
 
-    public static User convertUserRegisterRequestToUserConverter(UserRegisterOAuth2Request request){
+    public static User convertUserRegisterRequestToUser(UserRegisterOAuth2Request request){
         User user = new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail());
@@ -72,7 +72,7 @@ public class UserConverter {
         return user;
     }
 
-    public static UserRegisterOAuth2Response convertUserToUserRegisterResponseConverter(User user){
+    public static UserRegisterOAuth2Response convertUserToUserRegisterResponse(User user){
         UserRegisterOAuth2Response response = new UserRegisterOAuth2Response();
         response.setEmail(user.getEmail());
         return response;

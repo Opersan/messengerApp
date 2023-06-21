@@ -48,9 +48,9 @@ public class UserService implements UserDetailsService {
     }
 
     public UserDTO saveUser(UserDTO user) {
-        User newUser = UserConverter.convertUserDTOtoUserConverter(user);
+        User newUser = UserConverter.convertUserDTOtoUser(user);
         newUser.setHashedPassword(passwordEncoder.encode(user.getPassword()));
-        return UserConverter.convertUsertoUserDTOConverter(userRepository.save(newUser));
+        return UserConverter.convertUsertoUserDTO(userRepository.save(newUser));
     }
 
     public ProfileDTO saveUserByProfile(ProfileDTO profileDTO, AccountDTO accountDTO) {
@@ -71,9 +71,9 @@ public class UserService implements UserDetailsService {
     }
 
     public UserRegisterOAuth2Response saveUserSilent(UserRegisterOAuth2Request user) {
-        User newUser = UserConverter.convertUserRegisterRequestToUserConverter(user);
+        User newUser = UserConverter.convertUserRegisterRequestToUser(user);
         newUser.setHashedPassword(passwordEncoder.encode(user.getPassword()));
-        return UserConverter.convertUserToUserRegisterResponseConverter(userRepository.save(newUser));
+        return UserConverter.convertUserToUserRegisterResponse(userRepository.save(newUser));
     }
 
     @Override

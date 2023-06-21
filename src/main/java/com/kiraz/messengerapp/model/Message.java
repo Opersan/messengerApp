@@ -7,8 +7,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Date;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,7 +34,8 @@ public class Message {
     private String image;
 
     @Column
-    private Date createdAt;
+    @CreationTimestamp
+    private Instant createdAt;
 
     @ManyToMany(mappedBy = "seenMessages")
     @JsonIgnore
@@ -41,10 +44,17 @@ public class Message {
     @ManyToOne()
     @JoinColumn(name = "conversation_id")
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @JsonIgnore
     private Conversation conversation;
 
     @ManyToOne()
     @JoinColumn(name = "user_id")
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @JsonIgnore
     private User senderUser;
+
+    public void addSeenUser(User user) {
+        this.seenUsers.add(user);
+        user.getSeenMessages().add(this);
+    }
 }

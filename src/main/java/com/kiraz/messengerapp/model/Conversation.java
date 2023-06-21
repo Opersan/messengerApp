@@ -2,14 +2,13 @@ package com.kiraz.messengerapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.*;
 
 import java.sql.Date;
 import java.time.Instant;
@@ -34,7 +33,7 @@ public class Conversation {
     private Instant createdAt;
 
     @Column
-    private Date lastMessageAt;
+    private Instant lastMessageAt;
 
     @Column
     private String name;

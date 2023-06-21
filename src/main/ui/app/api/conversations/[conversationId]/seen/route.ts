@@ -33,10 +33,13 @@ export async function POST(
             return NextResponse.json(conversation.data);
         }
 
-        const updatedMessage = "";
+        const updatedMessage = await axios.put(process.env.SPRING_API_URL + '/api/messages/updateMessage', {
+            messageId: lastMessage.id,
+            userId: currentUser.id
+        });
         // todo update seen of last message where lastMessage.id user'ı seen set'ine ekle
 
-        return NextResponse.json(updatedMessage);
+        return NextResponse.json(updatedMessage.data);
     } catch (error: any) {
         console.log(error, 'ERROR_MESSAGES_SEEN');
         return new NextResponse("Internal Error", {status: 500});

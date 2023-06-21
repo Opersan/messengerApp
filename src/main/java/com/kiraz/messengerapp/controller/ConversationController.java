@@ -41,9 +41,9 @@ public class ConversationController {
     public ConversationDTO getConversationById(@RequestParam(value = "conversationId") Long id) {
         Optional<Conversation> conversation = conversationService.getConversation(id);
         if (conversation.isPresent()) {
-            return ConversationConverter.convertConversationToConversationDTOConverter(conversation.get());
+            return ConversationConverter.convertConversationToConversationDTO(conversation.get());
         } else {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
         }
     }
 
@@ -53,7 +53,7 @@ public class ConversationController {
         User user2 = userController.getUserById(id2);
         Optional<Conversation> conversation = conversationService.getConversationByUser(user1, user2);
         return conversation.isPresent() ?
-                ConversationConverter.convertConversationToConversationDTOConverter(conversation.get()) : null;
+                ConversationConverter.convertConversationToConversationDTO(conversation.get()) : null;
     }
 
     @GetMapping("/allConversationsByUserId")
@@ -61,9 +61,9 @@ public class ConversationController {
         User user = userController.getUserById(id);
         Set<Conversation> conversations = conversationService.getAllConversationByUser(user);
         if (!conversations.isEmpty()) {
-            return ConversationConverter.convertConversationSetToConversationDTOSetConverter(conversations);
+            return ConversationConverter.convertConversationSetToConversationDTOSet(conversations);
         } else {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
         }
     }
 
@@ -72,13 +72,20 @@ public class ConversationController {
         Conversation createdConversation = conversationService.createConversation(userController.getUserById(user1.getId()),
                 userController.getUserById(user2.getId()));
 
-        return ConversationConverter.convertConversationToConversationDTOConverter(createdConversation);
+        return ConversationConverter.convertConversationToConversationDTO(createdConversation);
     }
 
     @PostMapping("/createGroupConversation")
     public ConversationDTO createGroupConversation(@RequestBody Set<UserDTO> userDTOList) {
         Conversation createdConversation = conversationService.createGroupConversation(UserConverter.convertUserDTOListToUserList(userDTOList));
 
-        return ConversationConverter.convertConversationToConversationDTOConverter(createdConversation);
+        return ConversationConverter.convertConversationToConversationDTO(createdConversation);
+    }
+
+    @PutMapping("/updateConversation")
+    public ConversationDTO updateConversationLastMessageAt(@JsonArg("conversationId") String conversationId) {
+        ConversationDTO conversation = ConversationConverter.convertConversationToConversationDTO(conversationService.updateConversationLastMessageAt(Long.valueOf(conversationId)));
+        if (conversation == null) throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+        return conversation;
     }
 }

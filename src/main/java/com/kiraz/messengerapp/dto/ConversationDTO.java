@@ -15,7 +15,7 @@ import java.util.Set;
 public class ConversationDTO {
     private long id;
     private Instant createdAt;
-    private Date lastMessageAt;
+    private Instant lastMessageAt;
     private String name;
     private Boolean isGroup;
     private List<Message> messages;

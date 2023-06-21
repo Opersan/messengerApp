@@ -9,8 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api")
@@ -31,8 +33,8 @@ public class UserController {
     }
 
     @GetMapping("/userExceptItself")
-    public List<UserDTO> getAllUsersExceptItself(@RequestParam(value="email") String email) {
-        List<UserDTO> users = UserConverter.convertUserToUserDTOList(userService.getAllUsersExceptItself(email));
+    public Set<UserDTO> getAllUsersExceptItself(@RequestParam(value="email") String email) {
+        Set<UserDTO> users = UserConverter.convertUserListToUserDTOList(new HashSet<>(userService.getAllUsersExceptItself(email)));
         if (users.isEmpty()) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         return users;
     }
@@ -65,7 +67,7 @@ public class UserController {
         if (user.isPresent()) {
             return UserConverter.convertUserToUserDTO(user.get());
         } else {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
         }
     }
 

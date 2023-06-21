@@ -5,6 +5,7 @@ import com.kiraz.messengerapp.model.User;
 import com.kiraz.messengerapp.repository.ConversationRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +38,7 @@ public class ConversationService {
     }
 
     public Set<Conversation> getAllConversationByUser(User user){
-        return user.getConversations();
+        return new HashSet<>(conversationRepository.findAllByUsers(user));
     }
 
     public Conversation createConversation(User user1, User user2) {
@@ -55,6 +56,12 @@ public class ConversationService {
         conversation.setUsers(userList);
 
         return conversationRepository.save(conversation);
+    }
+
+    public Conversation updateConversationLastMessageAt(Long conversationId) {
+        Optional<Conversation> conversation = conversationRepository.findById(conversationId);
+        conversation.get().setLastMessageAt(Instant.now());
+        return conversationRepository.save(conversation.get());
     }
 
 }
