@@ -70,6 +70,15 @@ public class UserService implements UserDetailsService {
         userRepository.save(updatedUser);
     }
 
+    public User updateUserByUserDTO(UserUpdateRequest request) {
+        User updatedUser = userRepository.findByEmail(request.getEmail()).get();
+
+        updatedUser.setName(!request.getName().isEmpty() ? request.getName() : updatedUser.getName());
+        updatedUser.setImage(!request.getImage().isEmpty() ? request.getName() : updatedUser.getName());
+
+        return userRepository.save(updatedUser);
+    }
+
     public UserRegisterOAuth2Response saveUserSilent(UserRegisterOAuth2Request user) {
         User newUser = UserConverter.convertUserRegisterRequestToUser(user);
         newUser.setHashedPassword(passwordEncoder.encode(user.getPassword()));

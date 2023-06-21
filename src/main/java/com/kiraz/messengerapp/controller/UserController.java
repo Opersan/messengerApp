@@ -2,6 +2,7 @@ package com.kiraz.messengerapp.controller;
 
 import com.kiraz.messengerapp.converter.UserConverter;
 import com.kiraz.messengerapp.dto.UserDTO;
+import com.kiraz.messengerapp.dto.UserUpdateRequest;
 import com.kiraz.messengerapp.model.User;
 import com.kiraz.messengerapp.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,12 @@ public class UserController {
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    @PutMapping("/updateUser")
+    public UserDTO updateUserInfo(@RequestBody UserUpdateRequest request) {
+        UserDTO user = UserConverter.convertUsertoUserDTO(userService.updateUserByUserDTO(request));
+        return user;
     }
 
     @GetMapping("/userById")

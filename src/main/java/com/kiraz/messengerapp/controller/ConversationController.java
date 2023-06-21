@@ -8,6 +8,7 @@ import com.kiraz.messengerapp.model.Conversation;
 import com.kiraz.messengerapp.converter.ConversationConverter;
 import com.kiraz.messengerapp.model.User;
 import com.kiraz.messengerapp.service.ConversationService;
+import jakarta.persistence.JoinColumn;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -87,5 +88,14 @@ public class ConversationController {
         ConversationDTO conversation = ConversationConverter.convertConversationToConversationDTO(conversationService.updateConversationLastMessageAt(Long.valueOf(conversationId)));
         if (conversation == null) throw new ResponseStatusException(HttpStatus.NO_CONTENT);
         return conversation;
+    }
+
+    @DeleteMapping("/deleteConversation")
+    public ConversationDTO deleteConversation(@RequestParam("conversationId") Long conversationId, @RequestParam("userId") Long userId){
+        User user = userController.getUserById(userId);
+        ConversationDTO conversationDTO = ConversationConverter.convertConversationToConversationDTO
+                (conversationService.deleteConversation(conversationId, user));
+
+        return conversationDTO;
     }
 }

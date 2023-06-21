@@ -18,11 +18,13 @@ export async function DELETE(
             return new NextResponse('Unauthorized', {status: 401});
         }
 
-        const existingConversation = await axios.delete(process.env.SPRING_API_URL + '', {
+        const existingConversation =
+            await axios.delete(process.env.SPRING_API_URL + '/api/conversations/deleteConversation', {
             params: {
-                conversationId: conversationId
+                conversationId: conversationId,
+                userId: currentUser.id
             }
-        }); // todo silme işlemini sadece conversation'ın sahibi olan kullanıcı yapabilir bunu checkle
+        });
 
         if (!existingConversation) {
             return new NextResponse('Invalid ID!', {status: 400});

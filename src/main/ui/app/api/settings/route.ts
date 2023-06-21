@@ -11,6 +11,7 @@ export async function POST(
 
         const {
             name,
+            email,
             image
         } = body;
 
@@ -18,8 +19,13 @@ export async function POST(
             return new NextResponse( 'Unauthorized', { status: 401});
         }
 
-        const updatedUser = await axios.post('');
-        // name ve image güncelle user için
+        const updatedUser = await axios.post(process.env.SPRING_API_URL + '/api/users/updateUser', {
+            userDTO: {
+                name: name,
+                email: email,
+                image: image
+            }
+        });
 
         return NextResponse.json(updatedUser.data);
 

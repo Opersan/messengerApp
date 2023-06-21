@@ -3,7 +3,9 @@ package com.kiraz.messengerapp.service;
 import com.kiraz.messengerapp.model.Conversation;
 import com.kiraz.messengerapp.model.User;
 import com.kiraz.messengerapp.repository.ConversationRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.HashSet;
@@ -62,6 +64,14 @@ public class ConversationService {
         Optional<Conversation> conversation = conversationRepository.findById(conversationId);
         conversation.get().setLastMessageAt(Instant.now());
         return conversationRepository.save(conversation.get());
+    }
+
+    public Conversation deleteConversation(Long id, User user) {
+        Optional<Conversation> conversation = conversationRepository.findById(id);
+        if (conversation.get().getUsers().contains(user)) {
+            conversationRepository.deleteById(id);
+        } else throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        return conversation.get();
     }
 
 }
