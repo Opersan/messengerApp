@@ -2,7 +2,7 @@
 import useRoutes from "@/app/hooks/useRoutes";
 import React, {useState} from "react";
 import DesktopItem from "@/app/components/sidebar/DesktopItem";
-import Avatar from "@/app/(site)/components/Avatar";
+import Avatar from "@/app/components/Avatar";
 import {User} from "@/app/types";
 import SettingsModal from "@/app/components/sidebar/SettingsModal";
 

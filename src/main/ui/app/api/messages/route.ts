@@ -1,6 +1,7 @@
 import {NextResponse} from "next/server";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import axios from "axios";
+import { pusherServer } from "@/app/libs/pusher";
 
 export async function POST(
     request: Request
@@ -30,6 +31,19 @@ export async function POST(
         const updatedConversation = await axios.put(process.env.SPRING_API_URL + '/api/conversations/updateConversation', {
             conversationId: conversationId
         });
+
+
+        await pusherServer.trigger(conversationId, 'messages:new', newMessage.data);
+
+        const lastMessage = updatedConversation.data.messages[updatedConversation.data.messages.length - 1];
+
+        // @ts-ignore
+        updatedConversation.data.users.map((user) => {
+            pusherServer.trigger(user.email!, 'conversation:update', {
+                id: conversationId,
+                messages: [lastMessage]
+            })
+        })
 
         return NextResponse.json(newMessage.data);
 

@@ -1,6 +1,7 @@
 import {NextResponse} from "next/server";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import axios from "axios";
+import {pusherServer} from "@/app/libs/pusher";
 
 interface IParams{
     conversationId?: string
@@ -27,6 +28,10 @@ export async function POST(
             return new NextResponse('Invalid ID', {status: 400});
         }
 
+        console.log("Cevap:");
+        console.log(conversation.data);
+        console.log("cevap bitti");
+
         const lastMessage = conversation.data.messages[conversation.data.messages.length - 1];
 
         if (!lastMessage) {
@@ -38,6 +43,20 @@ export async function POST(
             userId: currentUser.id
         });
         // todo update seen of last message where lastMessage.id user'ı seen set'ine ekle
+
+        await pusherServer.trigger(currentUser.email, 'conversation:update', {
+            id: conversationId,
+            message: [updatedMessage.data]
+        });
+
+        /* @ts-ignore
+        if(lastMessage.seenUsers.filter((user) => user.id != currentUser.id).length > 0) {
+            return NextResponse.json(conversation.data);
+        }
+
+         */
+
+        await pusherServer.trigger(conversationId!, 'message:update', updatedMessage.data);
 
         return NextResponse.json(updatedMessage.data);
     } catch (error: any) {

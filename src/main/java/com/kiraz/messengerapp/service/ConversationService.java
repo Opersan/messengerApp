@@ -1,5 +1,6 @@
 package com.kiraz.messengerapp.service;
 
+import com.kiraz.messengerapp.dto.GroupUserDTO;
 import com.kiraz.messengerapp.model.Conversation;
 import com.kiraz.messengerapp.model.Message;
 import com.kiraz.messengerapp.model.User;
@@ -53,10 +54,12 @@ public class ConversationService {
         return conversationRepository.save(conversation);
     }
 
-    public Conversation createGroupConversation(Set<User> userList) {
+    public Conversation createGroupConversation(String conversationName, Set<User> userSet) {
         Conversation conversation = new Conversation();
 
-        conversation.setUsers(userList);
+        conversation.setIsGroup(true);
+        conversation.setName(conversationName);
+        conversation.addUserSet(userSet);
 
         return conversationRepository.save(conversation);
     }

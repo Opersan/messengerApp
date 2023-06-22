@@ -60,6 +60,13 @@ public class Conversation {
         user.getConversations().add(this);
     }
 
+    public void addUserSet(Set<User> users) {
+        for (User user: users) {
+            this.users.add(user);
+            user.getConversations().add(this);
+        }
+    }
+
     public void deleteMessages() {
         for (Message message: messages) {
             message.setConversation(null);

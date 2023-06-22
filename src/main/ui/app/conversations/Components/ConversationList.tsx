@@ -1,24 +1,30 @@
 "use client";
-import {Conversation} from "@/app/types";
+import {Conversation, User} from "@/app/types";
 import {useState} from "react";
 import {useRouter} from "next/navigation";
 import useConversation from "@/app/hooks/useConversation";
 import clsx from "clsx";
 import {MdOutlineGroupAdd} from "react-icons/md";
 import ConversationBox from "@/app/conversations/Components/ConversationBox";
+import GroupChatModal from "@/app/conversations/Components/GroupChatModal";
 
 interface ConversationsListProps {
     initialItems: Conversation[];
+    users: User[]
 }
 
 const ConversationList: React.FC<ConversationsListProps> = ({
-    initialItems
+    initialItems,
+    users
 }) => {
     const [items, seTItems] = useState(initialItems);
+    const [isModalOpen, setIsModelOpen] = useState(false);
+
     const router = useRouter();
     const { conversationId, isOpen } = useConversation();
     return (
-        <div>
+        <>
+            <GroupChatModal users={users} isOpen={isModalOpen} onClose={() => setIsModelOpen(false)}/>
             <aside className={clsx(`fixed inset-y-0 pb-20 lg:pb-0 lg:left-20 lg:w-80
                                           lg:block overflow-y-auto border-r border-gray-200`,
                                           isOpen ? 'hidden' : 'block w-full left-0')}>
@@ -28,7 +34,7 @@ const ConversationList: React.FC<ConversationsListProps> = ({
                             Messages
                         </div>
                         <div className="rounded-full p-2 bg-gray-100 text-gray-600 cursor-pointer
-                                        hover:opacity-75 transition">
+                                        hover:opacity-75 transition" onClick={() => setIsModelOpen(true)}>
                             <MdOutlineGroupAdd size={20}/>
                         </div>
                     </div>
@@ -37,7 +43,7 @@ const ConversationList: React.FC<ConversationsListProps> = ({
                     ))}
                 </div>
             </aside>
-        </div>
+        </>
     );
 }
 

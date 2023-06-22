@@ -7,7 +7,9 @@ import {useRouter} from "next/navigation";
 import {useCallback, useMemo} from "react";
 import {format} from "date-fns";
 import clsx from "clsx";
-import Avatar from "@/app/(site)/components/Avatar";
+import Avatar from "@/app/components/Avatar";
+import AvatarGroup from "@/app/components/AvatarGroup";
+import useOtherUsers from "@/app/hooks/useOtherUsers";
 
 interface ConversationBoxProps {
     data: Conversation,
@@ -19,6 +21,7 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
     selected
 }) => {
     const otherUser = useOtherUser(data);
+    const otherUsers = useOtherUsers(data);
     const session = useSession();
     const router = useRouter();
 
@@ -59,7 +62,11 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
       <div onClick={handleClick} className={clsx(`w-full relative flex items-center space-x-3
                                                         hover:bg-neutral-100 rounded-lg transition cursor-pointer p-3`,
                                                         selected ? 'bg-neutral-100' : 'bg-white')}>
-        <Avatar user={otherUser}/>
+        {data.isGroup ?  (
+          <AvatarGroup users={otherUsers}/>
+        ): (
+          <Avatar user={otherUser}/>
+        )}
         <div className="min-w-0 flex-1">
             <div className="focus:outline-none">
                 <div className="flex justify-between items-center mb-1">

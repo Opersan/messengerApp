@@ -3,6 +3,8 @@ package com.kiraz.messengerapp.controller;
 import com.kiraz.messengerapp.annotation.JsonArg;
 import com.kiraz.messengerapp.converter.UserConverter;
 import com.kiraz.messengerapp.dto.ConversationDTO;
+import com.kiraz.messengerapp.dto.GroupConversationDTO;
+import com.kiraz.messengerapp.dto.GroupUserDTO;
 import com.kiraz.messengerapp.dto.UserDTO;
 import com.kiraz.messengerapp.model.Conversation;
 import com.kiraz.messengerapp.converter.ConversationConverter;
@@ -14,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -77,8 +80,14 @@ public class ConversationController {
     }
 
     @PostMapping("/createGroupConversation")
-    public ConversationDTO createGroupConversation(@RequestBody Set<UserDTO> userDTOList) {
-        Conversation createdConversation = conversationService.createGroupConversation(UserConverter.convertUserDTOListToUserList(userDTOList));
+    public ConversationDTO createGroupConversation(@RequestBody GroupConversationDTO groupConversationDTOS) {
+        Set<User> users = new HashSet<>();
+
+        for (GroupUserDTO groupUserDTO: groupConversationDTOS.getMembers()) {
+            users.add(userController.getUserById(groupUserDTO.getValue()));
+        }
+
+        Conversation createdConversation = conversationService.createGroupConversation(groupConversationDTOS.getName(), users);
 
         return ConversationConverter.convertConversationToConversationDTO(createdConversation);
     }

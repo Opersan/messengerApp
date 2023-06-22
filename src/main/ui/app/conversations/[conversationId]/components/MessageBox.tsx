@@ -3,10 +3,12 @@
 import {Message} from "@/app/types";
 import {useSession} from "next-auth/react";
 import clsx from "clsx";
-import Avatar from "@/app/(site)/components/Avatar";
+import Avatar from "@/app/components/Avatar";
 import {format} from "date-fns";
 import Image from "next/image";
 import {compileNonPath} from "next/dist/shared/lib/router/utils/prepare-destination";
+import {useState} from "react";
+import ImageModal from "@/app/conversations/[conversationId]/components/ImageModal";
 
 interface MessageBoxProps {
     data: Message,
@@ -18,6 +20,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
     isLast
 }) => {
     const session = useSession();
+    const [imageModalOpen, setImageModalOpen] = useState(false);
 
     const isOwn = session?.data?.user?.email === data?.senderUser?.email;
     const seenList = (data.seenUsers || [])
@@ -49,8 +52,9 @@ const MessageBox: React.FC<MessageBoxProps> = ({
                     </div>
                 </div>
                 <div className={message}>
+                    <ImageModal src={data.image} isOpen={imageModalOpen} onClose={() => setImageModalOpen(false)}/>
                     {data.image ? (
-                        <Image alt="Image" height="288" width="288" src={data.image}
+                        <Image alt="Image" height="288" width="288" src={data.image} onClick={() => setImageModalOpen(true)}
                                className="object-cover cursor-pointer transition translate hover:scale-110"/>
                     ) : (
                         <div>{data.body}</div>

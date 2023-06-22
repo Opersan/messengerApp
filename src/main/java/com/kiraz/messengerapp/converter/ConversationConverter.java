@@ -1,6 +1,7 @@
 package com.kiraz.messengerapp.converter;
 
 import com.kiraz.messengerapp.dto.ConversationDTO;
+import com.kiraz.messengerapp.dto.GroupConversationDTO;
 import com.kiraz.messengerapp.model.Conversation;
 
 import java.util.ArrayList;
