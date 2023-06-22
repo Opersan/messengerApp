@@ -1,6 +1,7 @@
 import {NextResponse} from "next/server";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import axios from "axios";
+import {pusherServer} from "@/app/libs/pusher";
 
 interface IParams {
     conversationId?: string;
@@ -29,6 +30,20 @@ export async function DELETE(
         if (!existingConversation) {
             return new NextResponse('Invalid ID!', {status: 400});
         }
+
+        let payload = existingConversation.data;
+
+        delete payload.users[0].conversations;
+        delete payload.users[1].conversations;
+        delete payload.users[0].seenMessages;
+        delete payload.users[1].seenMessages;
+
+        // @ts-ignore
+        existingConversation.data.users.forEach((user) => {
+            if (user.email) {
+                pusherServer.trigger(user.email, "conversation:remove", existingConversation.data);
+            }
+        })
 
         return NextResponse.json(existingConversation.data);
 

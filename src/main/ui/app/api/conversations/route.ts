@@ -68,10 +68,15 @@ export async function POST(
             }
         });
 
+        let payload = newConversation.data;
+
+        delete payload.users[0].seenMessages;
+        delete payload.users[1].seenMessages;
+
         // @ts-ignore
-        newConversation.data.users.forEach((user) => {
+        newConversation.data.users.map((user) => {
             if (user.email) {
-                pusherServer.trigger(user.email, 'conversation:new', newConversation.data);
+                pusherServer.trigger(user.email, 'conversation:new', payload);
             }
         });
 

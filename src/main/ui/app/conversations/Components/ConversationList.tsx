@@ -23,7 +23,7 @@ const ConversationList: React.FC<ConversationsListProps> = ({
     const session = useSession();
     const [items, setItems] = useState(initialItems);
     const [isModalOpen, setIsModelOpen] = useState(false);
-
+    const { conversationId, isOpen } = useConversation();
     const router = useRouter();
 
     const pusherKey = useMemo(() => {
@@ -38,7 +38,6 @@ const ConversationList: React.FC<ConversationsListProps> = ({
         pusherClient.subscribe(pusherKey);
 
         const newHandler = (conversation: Conversation) => {
-            // @ts-ignore
             setItems((current) => {
                 if (find(current, { id: conversation.id })) {
                     return current;
@@ -48,15 +47,41 @@ const ConversationList: React.FC<ConversationsListProps> = ({
             })
         };
 
+        const updateHandler = (conversation: Conversation) => {
+            setItems((current) => current.map((currentConversation) => {
+                if (currentConversation.id === conversation.id) {
+                    return {
+                        ...currentConversation,
+                        messages: conversation.messages
+                    }
+                }
+
+                return currentConversation;
+            }))
+        }
+
+        const removeHandler = (conversation: Conversation) => {
+            setItems((current) => {
+                return [...current.filter((convo) => convo.id != conversation.id)];
+            });
+
+            if (conversationId === conversation.id) {
+                router.push('/conversations');
+            }
+        }
+
         pusherClient.bind('conversation:new', newHandler);
+        pusherClient.bind('conversation:update', updateHandler);
+        pusherClient.bind('conversation:remove', removeHandler);
 
         return () => {
             pusherClient.unsubscribe(pusherKey);
             pusherClient.unbind('conversation:new', newHandler);
+            pusherClient.unbind('conversation:update', updateHandler);
+            pusherClient.unbind('conversation:remove', removeHandler);
         }
-    })
+    }, [pusherKey, router, conversationId]);
 
-    const { conversationId, isOpen } = useConversation();
     return (
         <>
             <GroupChatModal users={users} isOpen={isModalOpen} onClose={() => setIsModelOpen(false)}/>
