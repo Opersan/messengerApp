@@ -49,13 +49,13 @@ const Body: React.FC<BodyProps> = ({
             }));
         }
 
-        pusherClient.bind('messages:new', messageHandler);
-        pusherClient.bind('messages:update', updateMessageHandler);
+        pusherClient.bind('message:new', messageHandler);
+        pusherClient.bind('message:update', updateMessageHandler);
 
         return () => {
             pusherClient.unsubscribe(conversationId);
-            pusherClient.unbind('messages:new', messageHandler);
-            pusherClient.unbind('messages:update', updateMessageHandler);
+            pusherClient.unbind('message:new', messageHandler);
+            pusherClient.unbind('message:update', updateMessageHandler);
         }
     }, [conversationId]);
 

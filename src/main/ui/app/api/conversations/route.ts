@@ -1,6 +1,7 @@
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import {NextResponse} from "next/server";
 import axios from "axios";
+import {pusherServer} from "@/app/libs/pusher";
 
 export async function POST(
     request: Request
@@ -35,8 +36,17 @@ export async function POST(
                 name: name,
                 members: members
             });
+
+            // @ts-ignore
+            newConversation.data.users.forEach((user) => {
+                if (user.email) {
+                    pusherServer.trigger(user.email, 'conversation:new', newConversation);
+                }
+            })
+
             return NextResponse.json(newConversation.data);
         }
+
         const existingConversations = await axios.get(process.env.SPRING_API_URL + '/api/conversations/conversationByUserId', {
             params: {
                 senderId: currentUser.id,
@@ -55,6 +65,13 @@ export async function POST(
             },
             receiverUser: {
                 id: userId
+            }
+        });
+
+        // @ts-ignore
+        newConversation.data.users.forEach((user) => {
+            if (user.email) {
+                pusherServer.trigger(user.email, 'conversation:new', newConversation.data);
             }
         });
 

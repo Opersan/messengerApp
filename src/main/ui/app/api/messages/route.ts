@@ -33,9 +33,13 @@ export async function POST(
         });
 
 
-        await pusherServer.trigger(conversationId, 'messages:new', newMessage.data);
+        delete newMessage.data.conversation;
+
+        await pusherServer.trigger(conversationId, 'message:new', newMessage.data);
 
         const lastMessage = updatedConversation.data.messages[updatedConversation.data.messages.length - 1];
+
+        delete lastMessage.seenUsers;
 
         // @ts-ignore
         updatedConversation.data.users.map((user) => {

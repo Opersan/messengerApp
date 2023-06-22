@@ -43,8 +43,10 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
         const seenArray = lastMessage.seenUsers || [];
         if (!userEmail) return false;
 
-        return seenArray.filter((user) => user.email === userEmail).length != 0;
+        return seenArray.filter((user) => user.id === userEmail).length != 0;
     }, [userEmail, lastMessage]);
+
+
 
     const lastMessageText = useMemo(() => {
         if (lastMessage?.image) {

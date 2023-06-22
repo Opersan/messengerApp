@@ -28,10 +28,6 @@ export async function POST(
             return new NextResponse('Invalid ID', {status: 400});
         }
 
-        console.log("Cevap:");
-        console.log(conversation.data);
-        console.log("cevap bitti");
-
         const lastMessage = conversation.data.messages[conversation.data.messages.length - 1];
 
         if (!lastMessage) {
@@ -44,17 +40,22 @@ export async function POST(
         });
         // todo update seen of last message where lastMessage.id user'ı seen set'ine ekle
 
+        let payload = updatedMessage.data;
+
+        delete payload.seenUsers;
+        delete payload.conversation;
+        delete payload.senderUser;
+
         await pusherServer.trigger(currentUser.email, 'conversation:update', {
             id: conversationId,
-            message: [updatedMessage.data]
+            message: [payload]
         });
 
-        /* @ts-ignore
+
+        // @ts-ignore
         if(lastMessage.seenUsers.filter((user) => user.id != currentUser.id).length > 0) {
             return NextResponse.json(conversation.data);
         }
-
-         */
 
         await pusherServer.trigger(conversationId!, 'message:update', updatedMessage.data);
 
