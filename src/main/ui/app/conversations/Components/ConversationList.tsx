@@ -1,5 +1,5 @@
 "use client";
-import {Conversation, User} from "@/app/types";
+import {Conversation, ConversationType2, User} from "@/app/types";
 import {useEffect, useMemo, useState} from "react";
 import {useRouter} from "next/navigation";
 import useConversation from "@/app/hooks/useConversation";
@@ -13,7 +13,7 @@ import {find} from "lodash";
 
 interface ConversationsListProps {
     initialItems: Conversation[];
-    users: User[]
+    users: User[];
 }
 
 const ConversationList: React.FC<ConversationsListProps> = ({

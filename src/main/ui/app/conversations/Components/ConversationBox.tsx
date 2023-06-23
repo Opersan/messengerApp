@@ -1,6 +1,6 @@
 "use client";
 
-import {Conversation} from "@/app/types";
+import {Conversation, User} from "@/app/types";
 import useOtherUser from "@/app/hooks/useOtherUser";
 import {useSession} from "next-auth/react";
 import {useRouter} from "next/navigation";
@@ -12,13 +12,13 @@ import AvatarGroup from "@/app/components/AvatarGroup";
 import useOtherUsers from "@/app/hooks/useOtherUsers";
 
 interface ConversationBoxProps {
-    data: Conversation,
-    selected?: boolean
+    data: Conversation;
+    selected?: boolean;
 }
 
 const ConversationBox: React.FC<ConversationBoxProps> = ({
     data,
-    selected
+    selected,
 }) => {
     const otherUser = useOtherUser(data);
     const otherUsers = useOtherUsers(data);
@@ -43,17 +43,17 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
         const seenArray = lastMessage.seenUsers || [];
         if (!userEmail) return false;
 
-        return seenArray.filter((user) => user.id === userEmail).length != 0;
+        return seenArray.filter((user) => user.email === userEmail).length != 0;
     }, [userEmail, lastMessage]);
 
-
+    console.log("ConversationID: " + data?.id + ", Seenusers: " + lastMessage?.seenUsers + ", hasSeen: " + hasSeen);
 
     const lastMessageText = useMemo(() => {
         if (lastMessage?.image) {
             return 'Sent an image';
         }
 
-        if (lastMessage?.body){
+        if (lastMessage?.body) {
             return lastMessage.body;
         }
 
@@ -61,32 +61,32 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
     }, [lastMessage]);
 
     return (
-      <div onClick={handleClick} className={clsx(`w-full relative flex items-center space-x-3
+        <div onClick = {handleClick} className = {clsx(`w-full relative flex items-center space-x-3
                                                         hover:bg-neutral-100 rounded-lg transition cursor-pointer p-3`,
-                                                        selected ? 'bg-neutral-100' : 'bg-white')}>
-        {data.isGroup ?  (
-          <AvatarGroup users={otherUsers}/>
-        ): (
-          <Avatar user={otherUser}/>
-        )}
-        <div className="min-w-0 flex-1">
-            <div className="focus:outline-none">
-                <div className="flex justify-between items-center mb-1">
-                    <p className="text-md font-medium text-gray-900">
-                        {data.name || otherUser.name}
-                    </p>
-                    {lastMessage?.createdAt && (
-                        <p className="text-xs text-gray-400 font-light">
-                            {format(new Date(lastMessage.createdAt), 'p')}
+            selected ? 'bg-neutral-100' : 'bg-white')}>
+            {data.isGroup ? (
+                <AvatarGroup users = {otherUsers}/>
+            ) : (
+                <Avatar user = {otherUser}/>
+            )}
+            <div className = "min-w-0 flex-1">
+                <div className = "focus:outline-none">
+                    <div className = "flex justify-between items-center mb-1">
+                        <p className = "text-md font-medium text-gray-900">
+                            {data.name || otherUser.name}
                         </p>
-                    )}
+                        {lastMessage?.createdAt && (
+                            <p className = "text-xs text-gray-400 font-light">
+                                {format(new Date(lastMessage.createdAt), 'p')}
+                            </p>
+                        )}
+                    </div>
+                    <p className = {clsx(`truncate text-sm`, hasSeen ? 'text-gray-500' : 'text-black font-medium')}>
+                        {lastMessageText}
+                    </p>
                 </div>
-                <p className={clsx(`truncate text-sm`, hasSeen ? 'text-gray-500' : 'text-black font-medium')}>
-                    {lastMessageText}
-                </p>
             </div>
         </div>
-      </div>
     );
 }
 

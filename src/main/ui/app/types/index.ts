@@ -27,3 +27,13 @@ export type Conversation = {
     users: User[]
 }
 
+export type ConversationType2 = {
+    id?: string,
+    name?: string,
+    isGroup?: boolean
+
+    messages?: Message[]
+    users: string[]
+}
+
+
