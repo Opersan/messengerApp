@@ -18,7 +18,7 @@ The Clone Messaging Application consists of two subprojects:
 1. **_Front-End:_** A Full-Stack React based Next.js project that handles the user interface and client-side functionality of the messaging application.
 2. **_Back-End:_** A Spring Boot based RESTful API that provides the necessary server-side functionality for the messaging application with the power of **PostreSQL**.
 
-![](C:\Users\Furkan\IdeaProjects\messengerApp\Resources\4.webp)
+![](Resources/4.webp)
 
 ## Technologies Used
 
