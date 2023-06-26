@@ -10,8 +10,6 @@
 
 ## Introduction
 This project showcases my Java-Spring Boot and React capabilities as a newly graduated software engineer and full-stack (mainly back-end) Java developer. The goal of this project is to develop a clone messaging application that adheres to SOLID concepts, clean code standards, and production-grade requirements.
-
-This project consists of 2 subprojects. One is a _**Full-Stack React Based Next.js**_ project and the other one is a **_Spring Boot based RESTful API._**
  
 ## Project Overview
 
@@ -19,6 +17,8 @@ The Clone Messaging Application consists of two subprojects:
 
 1. **_Front-End:_** A Full-Stack React based Next.js project that handles the user interface and client-side functionality of the messaging application.
 2. **_Back-End:_** A Spring Boot based RESTful API that provides the necessary server-side functionality for the messaging application with the power of **PostreSQL**.
+
+![](C:\Users\Furkan\IdeaProjects\messengerApp\Resources\4.webp)
 
 ## Technologies Used
 
@@ -32,6 +32,8 @@ The Clone Messaging Application consists of two subprojects:
 3. **_Messaging Functionality:_** Users can send and receive messages, create chat groups, and manage their conversations.
 4. **_Real-time Updates:_** The application incorporates real-time updates to provide instant notifications and message synchronization.
 
+
+
 ## Installation and Usage
 
 To run the Clone Messaging Application locally, follow these steps:
@@ -44,9 +46,17 @@ To run the Clone Messaging Application locally, follow these steps:
 4. Install dependencies for the Spring Boot project by using Gradle.
 5. Start the Back-End server: `cd ../../.. && ./gradlew bootRun`
 
+![](C:\Users\Furkan\IdeaProjects\messengerApp\Resources\2.webp)
+
 Once the servers are up and running, you can access the application by navigating to `http://localhost:3000` in your web browser.
 
 ## Internal Structure and Diagrams
+
+![](C:\Users\Furkan\IdeaProjects\messengerApp\Resources\structure.png)
+
+![](C:\Users\Furkan\IdeaProjects\messengerApp\Resources\3.webp)
+
+![](C:\Users\Furkan\IdeaProjects\messengerApp\Resources\1.webp)
 
 ## Endpoints List and Their Descriptions
 
