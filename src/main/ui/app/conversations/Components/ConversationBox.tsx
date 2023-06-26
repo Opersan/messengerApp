@@ -14,16 +14,20 @@ import useOtherUsers from "@/app/hooks/useOtherUsers";
 interface ConversationBoxProps {
     data: Conversation;
     selected?: boolean;
+    users: User[]
 }
 
 const ConversationBox: React.FC<ConversationBoxProps> = ({
     data,
     selected,
+    users
 }) => {
     const otherUser = useOtherUser(data);
     const otherUsers = useOtherUsers(data);
     const session = useSession();
     const router = useRouter();
+
+    const currentUser = users.filter((user) => user.email === session.data?.user?.email)[0];
 
     const handleClick = useCallback(() => {
         router.push(`/conversations/${data.id}`)
@@ -41,12 +45,11 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
     const hasSeen = useMemo(() => {
         if (!lastMessage) return false;
         const seenArray = lastMessage.seenUsers || [];
-        if (!userEmail) return false;
+        if (!currentUser?.id) return false;
+        // @ts-ignore
+        return seenArray.filter((user) => user === currentUser?.id).length != 0;
+    }, [currentUser?.id, lastMessage]);
 
-        return seenArray.filter((user) => user.email === userEmail).length != 0;
-    }, [userEmail, lastMessage]);
-
-    console.log("ConversationID: " + data?.id + ", Seenusers: " + lastMessage?.seenUsers + ", hasSeen: " + hasSeen);
 
     const lastMessageText = useMemo(() => {
         if (lastMessage?.image) {

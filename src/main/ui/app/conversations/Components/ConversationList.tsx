@@ -1,5 +1,5 @@
 "use client";
-import {Conversation, ConversationType2, User} from "@/app/types";
+import {Conversation, User} from "@/app/types";
 import {useEffect, useMemo, useState} from "react";
 import {useRouter} from "next/navigation";
 import useConversation from "@/app/hooks/useConversation";
@@ -14,11 +14,13 @@ import {find} from "lodash";
 interface ConversationsListProps {
     initialItems: Conversation[];
     users: User[];
+    allUsers: User[];
 }
 
 const ConversationList: React.FC<ConversationsListProps> = ({
     initialItems,
-    users
+    users,
+    allUsers
 }) => {
     const session = useSession();
     const [items, setItems] = useState(initialItems);
@@ -99,7 +101,7 @@ const ConversationList: React.FC<ConversationsListProps> = ({
                         </div>
                     </div>
                     {items.map((item) => (
-                        <ConversationBox key={item.id} data={item} selected={conversationId === item.id}/>
+                        <ConversationBox users={allUsers} key={item.id} data={item} selected={conversationId === item.id}/>
                     ))}
                 </div>
             </aside>
