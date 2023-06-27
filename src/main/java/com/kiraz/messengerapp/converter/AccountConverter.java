@@ -2,35 +2,18 @@ package com.kiraz.messengerapp.converter;
 
 import com.kiraz.messengerapp.dto.AccountDTO;
 import com.kiraz.messengerapp.model.Account;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-public class AccountConverter {
+@Mapper(componentModel = "spring")
+public interface AccountConverter {
 
-    public static Account convertAccountDTOtoAccount(AccountDTO accountDTO) {
-        Account account = new Account();
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "refresh_token", ignore = true)
+    @Mapping(target = "session_state", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    Account convertAccountDTOtoAccount(AccountDTO accountDTO);
 
-        account.setType(accountDTO.getType());
-        account.setProvider(accountDTO.getProvider());
-        account.setProviderAccountId(accountDTO.getProviderAccountId());
-        account.setAccess_token(accountDTO.getAccess_token());
-        account.setScope(accountDTO.getScope());
-        account.setExpires_at(accountDTO.getExpires_at());
-        account.setId_token(accountDTO.getId_token());
-
-        return account;
-    }
-
-    public static AccountDTO convertAccountToAccountDTO(Account account) {
-        AccountDTO accountDTO = new AccountDTO();
-
-        accountDTO.setType(account.getType());
-        accountDTO.setProvider(account.getProvider());
-        accountDTO.setProviderAccountId(accountDTO.getProviderAccountId());
-        accountDTO.setAccess_token(accountDTO.getAccess_token());
-        accountDTO.setScope(accountDTO.getScope());
-        accountDTO.setExpires_at(accountDTO.getExpires_at());
-        accountDTO.setId_token(accountDTO.getId_token());
-
-        return accountDTO;
-    }
-
+    @Mapping(target = "token_type", ignore = true)
+    AccountDTO convertAccountToAccountDTO(Account account);
 }

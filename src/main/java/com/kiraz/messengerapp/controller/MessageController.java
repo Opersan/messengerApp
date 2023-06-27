@@ -25,43 +25,52 @@ import java.util.Set;
 public class MessageController {
 
     private ConversationController conversationController;
+
     private UserController userController;
+
     private MessageService messageService;
 
+    private MessageConverter messageConverter;
+
+    private ConversationConverter conversationConverter;
+
     public MessageController(ConversationController conversationController,
-                             UserController userController, MessageService messageService) {
+                             UserController userController, MessageService messageService,
+                             MessageConverter messageConverter, ConversationConverter conversationConverter) {
         this.conversationController = conversationController;
         this.userController = userController;
         this.messageService = messageService;
+        this.messageConverter = messageConverter;
+        this.conversationConverter = conversationConverter;
     }
 
     @GetMapping("/messages")
     public ResponseEntity<List<MessageDTO>> getAllUsers() {
         List<Message> messages = messageService.getAllMessages();
-        return messages.isEmpty() ? null : new ResponseEntity<>(MessageConverter.convertMessageListToMessageDTOList(messages), HttpStatus.OK);
+        return messages.isEmpty() ? null : new ResponseEntity<>(messageConverter.convertMessageListToMessageDTOList(messages), HttpStatus.OK);
     }
 
     @PostMapping("/createMessage")
     public ResponseEntity<MessageDTO> createMessage(@RequestBody MessageCreationRequest request) {
         User senderUser = userController.getUserById(request.getSenderUserId());
         User seenUser = userController.getUserById(request.getSeenUserId());
-        Conversation conversation = ConversationConverter.convertConversationDTOToConversation(
+        Conversation conversation = conversationConverter.convertConversationDTOToConversation(
                 conversationController.getConversationById(Long.valueOf(request.getConversationId())));
-        Message messages = messageService.createMessage(MessageConverter.converMessageCreationRequestToMessage(request), conversation, senderUser, seenUser);
+        Message messages = messageService.createMessage(messageConverter.convertMessageCreationRequestToMessage(request), conversation, senderUser, seenUser);
         if (messages == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-        return new ResponseEntity<>(MessageConverter.convertMessageToMessageDTO(messages), HttpStatus.OK);
+        return new ResponseEntity<>(messageConverter.convertMessageToMessageDTO(messages), HttpStatus.OK);
     }
 
     @PutMapping("/updateMessage")
     public ResponseEntity<MessageDTO> updateLastSeenMessage(@JsonArg("messageId") Long messageId, @JsonArg("userId") Long userId) {
         User seenUser = userController.getUserById(userId);
-        MessageDTO updatedMessage = MessageConverter.convertMessageToMessageDTO(messageService.updateLastSeenMessage(messageId, seenUser));
+        MessageDTO updatedMessage = messageConverter.convertMessageToMessageDTO(messageService.updateLastSeenMessage(messageId, seenUser));
         return new ResponseEntity<>(updatedMessage, HttpStatus.OK);
     }
 
     @GetMapping("/messagesByConversationId")
     public ResponseEntity<List<MessageDTO>> getAllUsersExceptItself(@RequestParam(value="conversationId") Long id) {
-        List<MessageDTO> messages = MessageConverter.convertMessageListToMessageDTOList(messageService.getAllMessagesByConversationId(id));
+        List<MessageDTO> messages = messageConverter.convertMessageListToMessageDTOList(messageService.getAllMessagesByConversationId(id));
         if (messages.isEmpty()) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(messages, HttpStatus.OK);
     }

@@ -2,108 +2,51 @@ package com.kiraz.messengerapp.converter;
 
 import com.kiraz.messengerapp.dto.*;
 import com.kiraz.messengerapp.model.User;
-import com.kiraz.messengerapp.utils.DateUtils;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-public class UserConverter {
+@Mapper(componentModel = "spring")
+public interface UserConverter {
 
-    public static UserDTO convertUserToUserDTO(User user){
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
-        userDTO.setName(user.getName());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setImage(user.getImage());
+    @Mapping(target="password", source = "hashedPassword")
+    UserDTO convertUserToUserDTO(User user);
 
-        return userDTO;
-    }
+    Set<UserDTO> convertUserListToUserDTOList(Set<User> users);
 
-    public static Set<UserDTO> convertUserListToUserDTOList(Set<User> users){
-        Set<UserDTO> usersDTOList = new HashSet<>();
-        for (User user: users) {
-            UserDTO userDTO = new UserDTO();
-            userDTO.setId(user.getId());
-            userDTO.setName(user.getName());
-            userDTO.setEmail(user.getEmail());
-            userDTO.setImage(user.getImage());
-            usersDTOList.add(userDTO);
-        }
+    Set<User> convertUserDTOListToUserList(Set<UserDTO> userDTOList);
 
-        return usersDTOList;
-    }
+    @Mapping(target="hashedPassword", source = "password")
+    @Mapping(target = "emailVerified", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "conversations", ignore = true)
+    @Mapping(target = "seenMessages", ignore = true)
+    @Mapping(target = "account", ignore = true)
+    @Mapping(target = "messages", ignore = true)
+    User convertUserDTOtoUser(UserDTO userDTO);
 
-    public static Set<User> convertUserDTOListToUserList(Set<UserDTO> userDTOList) {
-        Set<User> userList = new HashSet<>();
-        for (UserDTO userDTO: userDTOList) {
-            User user = new User();
-            user.setName(userDTO.getName());
-            user.setEmail(userDTO.getEmail());
-            user.setImage(userDTO.getImage());
-            userList.add(user);
-        }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "hashedPassword", ignore = true)
+    @Mapping(target = "emailVerified", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "conversations", ignore = true)
+    @Mapping(target = "seenMessages", ignore = true)
+    @Mapping(target = "account", ignore = true)
+    @Mapping(target = "messages", ignore = true)
+    User convertUserRegisterRequestToUser(UserUpdateRequest request);
 
-        return userList;
-    }
-    public static User convertUserDTOtoUser(UserDTO userDTO){
-        User user = new User();
-        user.setName(userDTO.getName());
-        user.setEmail(userDTO.getEmail());
-        user.setHashedPassword(userDTO.getPassword());
-        return user;
-    }
-
-    public static UserDTO convertUsertoUserDTO(User user){
-        UserDTO userDTO = new UserDTO();
-        userDTO.setName(user.getName());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setImage(user.getImage());
-        userDTO.setPassword(user.getHashedPassword());
-        return userDTO;
-    }
-
-    public static User convertUserRegisterRequestToUser(UserUpdateRequest request){
-        User user = new User();
-        user.setName(request.getName());
-        user.setEmail(request.getEmail());
-        user.setImage(request.getImage());
-        return user;
-    }
-
-    public static User convertUserRegisterOAuth2RequestToUser(UserRegisterOAuth2Request request){
-        User user = new User();
-        user.setName(request.getName());
-        user.setEmail(request.getEmail());
-        user.setHashedPassword(request.getPassword());
-        return user;
-    }
-
-    public static UserRegisterOAuth2Response convertUserToUserRegisterResponse(User user){
-        UserRegisterOAuth2Response response = new UserRegisterOAuth2Response();
-        response.setEmail(user.getEmail());
-        return response;
-    }
-
-    public static User convertProfileToUser(ProfileDTO profileDTO) {
-        User user = new User();
-        user.setName(profileDTO.getName());
-        user.setEmail(profileDTO.getEmail());
-        user.setImage(profileDTO.getPicture());
-        user.setCreatedAt(Instant.ofEpochMilli(profileDTO.getIat()));
-
-        return user;
-    }
-
-    public static ProfileDTO convertUserToProfileDTO(User user) {
-        ProfileDTO profileDTO = new ProfileDTO();
-
-        profileDTO.setName(user.getName());
-        profileDTO.setEmail(user.getEmail());
-        profileDTO.setPicture(user.getImage());
-
-        return profileDTO;
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "hashedPassword", ignore = true)
+    @Mapping(target = "image", ignore = true)
+    @Mapping(target = "emailVerified", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "conversations", ignore = true)
+    @Mapping(target = "seenMessages", ignore = true)
+    @Mapping(target = "account", ignore = true)
+    @Mapping(target = "messages", ignore = true)
+    User convertProfileToUser(ProfileDTO profileDTO);
 }

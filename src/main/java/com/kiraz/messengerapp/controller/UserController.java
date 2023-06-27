@@ -22,8 +22,11 @@ public class UserController {
 
     private UserService userService;
 
-    public UserController(UserService userService) {
+    private UserConverter userConverter;
+
+    public UserController(UserService userService, UserConverter userConverter) {
         this.userService = userService;
+        this.userConverter = userConverter;
     }
 
     @GetMapping("/users")
@@ -35,7 +38,7 @@ public class UserController {
 
     @GetMapping("/userExceptItself")
     public ResponseEntity<Set<UserDTO>> getAllUsersExceptItself(@RequestParam(value="email") String email) {
-        Set<UserDTO> users = UserConverter.convertUserListToUserDTOList(new HashSet<>(userService.getAllUsersExceptItself(email)));
+        Set<UserDTO> users = userConverter.convertUserListToUserDTOList(new HashSet<>(userService.getAllUsersExceptItself(email)));
         if (users.isEmpty()) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
@@ -52,7 +55,7 @@ public class UserController {
     @PutMapping("/updateUser")
     public ResponseEntity<UserDTO> updateUserInfo(@RequestBody UserUpdateRequest request) {
         System.out.println(request.getName());
-        UserDTO user = UserConverter.convertUsertoUserDTO(userService.updateUserByUserDTO(UserConverter.convertUserRegisterRequestToUser(request)));
+        UserDTO user = userConverter.convertUserToUserDTO(userService.updateUserByUserDTO(userConverter.convertUserRegisterRequestToUser(request)));
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -60,7 +63,7 @@ public class UserController {
     public ResponseEntity<UserDTO> getUserDTOById(@RequestParam(value="id") Long id) {
         Optional<User> user = userService.getUser(id);
         if (user.isPresent()) {
-            return new ResponseEntity<>(UserConverter.convertUserToUserDTO(user.get()), HttpStatus.OK);
+            return new ResponseEntity<>(userConverter.convertUserToUserDTO(user.get()), HttpStatus.OK);
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
@@ -73,7 +76,7 @@ public class UserController {
             user = userService.getUserByEmail(email);
         }
         if (user.isPresent()) {
-            return new ResponseEntity<>(UserConverter.convertUserToUserDTO(user.get()), HttpStatus.OK);
+            return new ResponseEntity<>(userConverter.convertUserToUserDTO(user.get()), HttpStatus.OK);
         } else {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT);
         }

@@ -33,18 +33,25 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
     private JwtTokenService jwtTokenService;
 
+    private UserConverter userConverter;
+
+    private AccountConverter accountConverter;
+
     public AuthController(UserService userService, AuthenticationManager authenticationManager,
-                          JwtTokenService jwtTokenService, AccountService accountService) {
+                          JwtTokenService jwtTokenService, AccountService accountService,
+                          UserConverter userConverter, AccountConverter accountConverter) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.jwtTokenService = jwtTokenService;
         this.accountService = accountService;
+        this.userConverter = userConverter;
+        this.accountConverter = accountConverter;
     }
     @PostMapping("/save")
     public ResponseEntity<UserDTO> saveUser(@Valid @RequestBody UserDTO user) {
-        User newUser = userService.saveUser(UserConverter.convertUserDTOtoUser(user));
+        User newUser = userService.saveUser(userConverter.convertUserDTOtoUser(user));
         if(newUser != null) {
-            return new ResponseEntity<>(UserConverter.convertUserToUserDTO(newUser), HttpStatus.OK);
+            return new ResponseEntity<>(userConverter.convertUserToUserDTO(newUser), HttpStatus.OK);
         } else {
             logger.error("");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -74,12 +81,12 @@ public class AuthController {
                                              @JsonArg("profile") ProfileDTO profileDTO) {
         try {
             if (userService.getUserByEmail(profileDTO.getEmail()).isEmpty()) {
-                userService.saveUserByProfile(UserConverter.convertProfileToUser(profileDTO), AccountConverter.convertAccountDTOtoAccount(account));
+                userService.saveUserByProfile(userConverter.convertProfileToUser(profileDTO), accountConverter.convertAccountDTOtoAccount(account));
             } else {
-                userService.updateUserByProfile(UserConverter.convertProfileToUser(profileDTO));
+                userService.updateUserByProfile(userConverter.convertProfileToUser(profileDTO));
             }
             if (accountService.getAccountByProviderId(account.getProviderAccountId()).isEmpty()) {
-                accountService.saveAccountByAccountDTO(AccountConverter.convertAccountDTOtoAccount(account));
+                accountService.saveAccountByAccountDTO(accountConverter.convertAccountDTOtoAccount(account));
             } else {
                 accountService.updateAccountByAccountDTO(account);
             }
