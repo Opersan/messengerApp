@@ -1,6 +1,7 @@
 package com.kiraz.messengerapp.converter;
 
 import com.kiraz.messengerapp.controller.UserController;
+import com.kiraz.messengerapp.dto.MessageCreationRequest;
 import com.kiraz.messengerapp.dto.MessageDTO;
 import com.kiraz.messengerapp.model.Message;
 
@@ -40,5 +41,13 @@ public class MessageConverter {
         }
 
         return messageDTOList;
+    }
+
+    public static Message converMessageCreationRequestToMessage(MessageCreationRequest request) {
+        Message message = new Message();
+        message.setId(request.getId());
+        message.setBody(request.getBody());
+        message.setImage(request.getImage());
+        return message;
     }
 }

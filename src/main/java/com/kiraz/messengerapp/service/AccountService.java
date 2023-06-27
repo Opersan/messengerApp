@@ -32,10 +32,8 @@ public class AccountService {
         return accountRepository.findByProviderAccountId(providerId);
     }
 
-    public AccountDTO saveAccountByAccountDTO(AccountDTO accountDTO) {
-        Account account = AccountConverter.convertAccountDTOtoAccount(accountDTO);
-
-        return AccountConverter.convertAccountToAccountDTO(accountRepository.save(account));
+    public Account saveAccountByAccountDTO(Account account) {
+        return accountRepository.save(account);
     }
 
     public void updateAccountByAccountDTO(AccountDTO accountDTO) {

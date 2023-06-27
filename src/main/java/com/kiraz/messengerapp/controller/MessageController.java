@@ -36,32 +36,33 @@ public class MessageController {
     }
 
     @GetMapping("/messages")
-    public List<MessageDTO> getAllUsers() {
+    public ResponseEntity<List<MessageDTO>> getAllUsers() {
         List<Message> messages = messageService.getAllMessages();
-        return messages.isEmpty() ? null : MessageConverter.convertMessageListToMessageDTOList(messages);
+        return messages.isEmpty() ? null : new ResponseEntity<>(MessageConverter.convertMessageListToMessageDTOList(messages), HttpStatus.OK);
     }
 
     @PostMapping("/createMessage")
-    public MessageDTO createMessage(@RequestBody MessageCreationRequest request) {
+    public ResponseEntity<MessageDTO> createMessage(@RequestBody MessageCreationRequest request) {
         User senderUser = userController.getUserById(request.getSenderUserId());
+        User seenUser = userController.getUserById(request.getSeenUserId());
         Conversation conversation = ConversationConverter.convertConversationDTOToConversation(
                 conversationController.getConversationById(Long.valueOf(request.getConversationId())));
-        Message messages = messageService.createMessage(request, conversation, senderUser);
+        Message messages = messageService.createMessage(MessageConverter.converMessageCreationRequestToMessage(request), conversation, senderUser, seenUser);
         if (messages == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-        return MessageConverter.convertMessageToMessageDTO(messages);
+        return new ResponseEntity<>(MessageConverter.convertMessageToMessageDTO(messages), HttpStatus.OK);
     }
 
     @PutMapping("/updateMessage")
-    public MessageDTO updateLastSeenMessage(@JsonArg("messageId") Long messageId, @JsonArg("userId") Long userId) {
+    public ResponseEntity<MessageDTO> updateLastSeenMessage(@JsonArg("messageId") Long messageId, @JsonArg("userId") Long userId) {
         User seenUser = userController.getUserById(userId);
         MessageDTO updatedMessage = MessageConverter.convertMessageToMessageDTO(messageService.updateLastSeenMessage(messageId, seenUser));
-        return updatedMessage;
+        return new ResponseEntity<>(updatedMessage, HttpStatus.OK);
     }
 
     @GetMapping("/messagesByConversationId")
-    public List<MessageDTO> getAllUsersExceptItself(@RequestParam(value="conversationId") Long id) {
+    public ResponseEntity<List<MessageDTO>> getAllUsersExceptItself(@RequestParam(value="conversationId") Long id) {
         List<MessageDTO> messages = MessageConverter.convertMessageListToMessageDTOList(messageService.getAllMessagesByConversationId(id));
         if (messages.isEmpty()) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-        return messages;
+        return new ResponseEntity<>(messages, HttpStatus.OK);
     }
 }

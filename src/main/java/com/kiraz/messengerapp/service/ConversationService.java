@@ -70,7 +70,7 @@ public class ConversationService {
         return conversationRepository.save(conversation.get());
     }
 
-    public Conversation deleteConversation(Long id, User user) {
+    public Optional<Conversation> deleteConversation(Long id, User user) {
         Optional<Conversation> conversation = conversationRepository.findById(id);
         if (conversation.get().getUsers().contains(user)) {
             for (Message message: conversation.get().getMessages()) {
@@ -79,8 +79,8 @@ public class ConversationService {
             conversation.get().deleteMessages();
             conversation.get().deleteUsers();
             conversationRepository.deleteById(id);
-        } else throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-        return conversation.get();
+        }
+        return conversation;
     }
 
 }

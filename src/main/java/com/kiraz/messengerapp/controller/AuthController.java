@@ -1,13 +1,17 @@
 package com.kiraz.messengerapp.controller;
 
 import com.kiraz.messengerapp.annotation.JsonArg;
+import com.kiraz.messengerapp.converter.AccountConverter;
+import com.kiraz.messengerapp.converter.UserConverter;
 import com.kiraz.messengerapp.dto.*;
+import com.kiraz.messengerapp.model.User;
 import com.kiraz.messengerapp.service.AccountService;
 import com.kiraz.messengerapp.service.JwtTokenService;
 import com.kiraz.messengerapp.service.UserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,16 +42,17 @@ public class AuthController {
     }
     @PostMapping("/save")
     public ResponseEntity<UserDTO> saveUser(@Valid @RequestBody UserDTO user) {
-        UserDTO newUser = userService.saveUser(user);
+        User newUser = userService.saveUser(UserConverter.convertUserDTOtoUser(user));
         if(newUser != null) {
-            return new ResponseEntity<>(newUser, HttpStatus.OK);
+            return new ResponseEntity<>(UserConverter.convertUserToUserDTO(newUser), HttpStatus.OK);
         } else {
+            logger.error("");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping("/loginWithPwd")
-    public UserLoginRequest loginWithPwd(@Valid @RequestBody UserLoginRequest user) {
+    public ResponseEntity<UserLoginRequest> loginWithPwd(@Valid @RequestBody UserLoginRequest user) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
@@ -61,21 +66,20 @@ public class AuthController {
         final UserLoginResponse userLoginResponse = new UserLoginResponse();
         userLoginResponse.setAccessToken(jwtTokenService.generateToken(userDetails));
 
-        //todo response düzelt
-        return user;
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping("/loginWithOAuth2")
-    public UserLoginResponse loginWithGoogle(@JsonArg("account") AccountDTO account,
+    public ResponseEntity<UserLoginResponse> loginWithGoogle(@JsonArg("account") AccountDTO account,
                                              @JsonArg("profile") ProfileDTO profileDTO) {
         try {
             if (userService.getUserByEmail(profileDTO.getEmail()).isEmpty()) {
-                userService.saveUserByProfile(profileDTO, account);
+                userService.saveUserByProfile(UserConverter.convertProfileToUser(profileDTO), AccountConverter.convertAccountDTOtoAccount(account));
             } else {
-                userService.updateUserByProfile(profileDTO);
+                userService.updateUserByProfile(UserConverter.convertProfileToUser(profileDTO));
             }
             if (accountService.getAccountByProviderId(account.getProviderAccountId()).isEmpty()) {
-                accountService.saveAccountByAccountDTO(account);
+                accountService.saveAccountByAccountDTO(AccountConverter.convertAccountDTOtoAccount(account));
             } else {
                 accountService.updateAccountByAccountDTO(account);
             }
@@ -88,6 +92,6 @@ public class AuthController {
         final UserLoginResponse userLoginResponse = new UserLoginResponse();
         userLoginResponse.setAccessToken(jwtTokenService.generateToken(userDetails));
 
-        return userLoginResponse;
+        return new ResponseEntity<>(userLoginResponse, HttpStatus.OK);
     }
 }

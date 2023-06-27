@@ -42,7 +42,16 @@ public class ConversationController {
     }
 
     @GetMapping("/conversationById")
-    public ConversationDTO getConversationById(@RequestParam(value = "conversationId") Long id) {
+    public ResponseEntity<ConversationDTO> getConversation(@RequestParam(value = "conversationId") Long id) {
+        Optional<Conversation> conversation = conversationService.getConversation(id);
+        if (conversation.isPresent()) {
+            return new ResponseEntity<>(ConversationConverter.convertConversationToConversationDTO(conversation.get()), HttpStatus.OK);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    public ConversationDTO getConversationById(Long id) {
         Optional<Conversation> conversation = conversationService.getConversation(id);
         if (conversation.isPresent()) {
             return ConversationConverter.convertConversationToConversationDTO(conversation.get());
@@ -52,35 +61,35 @@ public class ConversationController {
     }
 
     @GetMapping("/conversationByUserId")
-    public ConversationDTO getConversationByUserId(@RequestParam(value = "senderId") Long id1, @RequestParam(value = "receiverId") Long id2) {
+    public ResponseEntity<ConversationDTO> getConversationByUserId(@RequestParam(value = "senderId") Long id1, @RequestParam(value = "receiverId") Long id2) {
         User user1 = userController.getUserById(id1);
         User user2 = userController.getUserById(id2);
         Optional<Conversation> conversation = conversationService.getConversationByUser(user1, user2);
         return conversation.isPresent() ?
-                ConversationConverter.convertConversationToConversationDTO(conversation.get()) : null;
+                new ResponseEntity<>(ConversationConverter.convertConversationToConversationDTO(conversation.get()), HttpStatus.OK) : null;
     }
 
     @GetMapping("/allConversationsByUserId")
-    public Set<ConversationDTO> getAllConversationByUserId(@RequestParam Long id) {
+    public ResponseEntity<Set<ConversationDTO>> getAllConversationByUserId(@RequestParam Long id) {
         User user = userController.getUserById(id);
         Set<Conversation> conversations = conversationService.getAllConversationByUser(user);
         if (!conversations.isEmpty()) {
-            return ConversationConverter.convertConversationSetToConversationDTOSet(conversations);
+            return new ResponseEntity<>(ConversationConverter.convertConversationSetToConversationDTOSet(conversations), HttpStatus.OK);
         } else {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT);
         }
     }
 
     @PostMapping("/createConversation")
-    public ConversationDTO createConversation(@JsonArg("senderUser") UserDTO user1, @JsonArg("receiverUser") UserDTO user2) {
+    public ResponseEntity<ConversationDTO> createConversation(@JsonArg("senderUser") UserDTO user1, @JsonArg("receiverUser") UserDTO user2) {
         Conversation createdConversation = conversationService.createConversation(userController.getUserById(user1.getId()),
                 userController.getUserById(user2.getId()));
 
-        return ConversationConverter.convertConversationToConversationDTO(createdConversation);
+        return new ResponseEntity<>(ConversationConverter.convertConversationToConversationDTO(createdConversation), HttpStatus.OK);
     }
 
     @PostMapping("/createGroupConversation")
-    public ConversationDTO createGroupConversation(@RequestBody GroupConversationDTO groupConversationDTOS) {
+    public ResponseEntity<ConversationDTO> createGroupConversation(@RequestBody GroupConversationDTO groupConversationDTOS) {
         Set<User> users = new HashSet<>();
 
         for (GroupUserDTO groupUserDTO: groupConversationDTOS.getMembers()) {
@@ -89,22 +98,22 @@ public class ConversationController {
 
         Conversation createdConversation = conversationService.createGroupConversation(groupConversationDTOS.getName(), users);
 
-        return ConversationConverter.convertConversationToConversationDTO(createdConversation);
+        return new ResponseEntity<>(ConversationConverter.convertConversationToConversationDTO(createdConversation), HttpStatus.OK);
     }
 
     @PutMapping("/updateConversation")
-    public ConversationDTO updateConversationLastMessageAt(@JsonArg("conversationId") String conversationId) {
+    public ResponseEntity<ConversationDTO> updateConversationLastMessageAt(@JsonArg("conversationId") String conversationId) {
         ConversationDTO conversation = ConversationConverter.convertConversationToConversationDTO(conversationService.updateConversationLastMessageAt(Long.valueOf(conversationId)));
         if (conversation == null) throw new ResponseStatusException(HttpStatus.NO_CONTENT);
-        return conversation;
+        return new ResponseEntity<>(conversation, HttpStatus.OK);
     }
 
     @DeleteMapping("/deleteConversation")
-    public ConversationDTO deleteConversation(@RequestParam("conversationId") Long conversationId, @RequestParam("userId") Long userId){
+    public ResponseEntity<ConversationDTO> deleteConversation(@RequestParam("conversationId") Long conversationId, @RequestParam("userId") Long userId){
         User user = userController.getUserById(userId);
         ConversationDTO conversationDTO = ConversationConverter.convertConversationToConversationDTO
-                (conversationService.deleteConversation(conversationId, user));
+                (conversationService.deleteConversation(conversationId, user).get());
 
-        return conversationDTO;
+        return new ResponseEntity<>(conversationDTO, HttpStatus.OK);
     }
 }

@@ -65,7 +65,15 @@ public class UserConverter {
         return userDTO;
     }
 
-    public static User convertUserRegisterRequestToUser(UserRegisterOAuth2Request request){
+    public static User convertUserRegisterRequestToUser(UserUpdateRequest request){
+        User user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setImage(request.getImage());
+        return user;
+    }
+
+    public static User convertUserRegisterOAuth2RequestToUser(UserRegisterOAuth2Request request){
         User user = new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail());

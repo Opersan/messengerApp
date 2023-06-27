@@ -7,6 +7,7 @@ import com.kiraz.messengerapp.model.Account;
 import com.kiraz.messengerapp.model.User;
 import com.kiraz.messengerapp.repository.UserRepository;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -47,42 +48,39 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(email);
     }
 
-    public UserDTO saveUser(UserDTO user) {
-        User newUser = UserConverter.convertUserDTOtoUser(user);
-        newUser.setHashedPassword(passwordEncoder.encode(user.getPassword()));
-        return UserConverter.convertUsertoUserDTO(userRepository.save(newUser));
+    public User saveUser(User user) {
+        user.setHashedPassword(passwordEncoder.encode(user.getHashedPassword()));
+        return userRepository.save(user);
     }
 
-    public ProfileDTO saveUserByProfile(ProfileDTO profileDTO, AccountDTO accountDTO) {
-        User newUser = UserConverter.convertProfileToUser(profileDTO);
-        newUser.setAccount(AccountConverter.convertAccountDTOtoAccount(accountDTO));
-        return UserConverter.convertUserToProfileDTO(userRepository.save(newUser));
+    public User saveUserByProfile(User user, Account account) {
+        user.setAccount(account);
+        return userRepository.save(user);
     }
 
-    public void updateUserByProfile(ProfileDTO profileDTO) {
-        User updatedUser = userRepository.findByEmail(profileDTO.getEmail()).get();
+    public void updateUserByProfile(User user) {
+        User updatedUser = userRepository.findByEmail(user.getEmail()).get();
 
-        updatedUser.setName(profileDTO.getName());
-        updatedUser.setEmail(profileDTO.getEmail());
-        updatedUser.setImage(profileDTO.getPicture());
-        updatedUser.setCreatedAt(Instant.ofEpochMilli(profileDTO.getIat()));
+        updatedUser.setName(user.getName());
+        updatedUser.setEmail(user.getEmail());
+        updatedUser.setImage(user.getImage());
+        updatedUser.setCreatedAt(user.getCreatedAt());
 
         userRepository.save(updatedUser);
     }
 
-    public User updateUserByUserDTO(UserUpdateRequest request) {
-        User updatedUser = userRepository.findByEmail(request.getEmail()).get();
+    public User updateUserByUserDTO(User user) {
+        User updatedUser = userRepository.findByEmail(user.getEmail()).get();
 
-        updatedUser.setName(!request.getName().isEmpty() ? request.getName() : updatedUser.getName());
-        updatedUser.setImage(!request.getImage().isEmpty() ? request.getImage() : updatedUser.getImage());
+        updatedUser.setName(!user.getName().isEmpty() ? user.getName() : updatedUser.getName());
+        updatedUser.setImage(!user.getImage().isEmpty() ? user.getImage() : updatedUser.getImage());
 
         return userRepository.save(updatedUser);
     }
 
-    public UserRegisterOAuth2Response saveUserSilent(UserRegisterOAuth2Request user) {
-        User newUser = UserConverter.convertUserRegisterRequestToUser(user);
-        newUser.setHashedPassword(passwordEncoder.encode(user.getPassword()));
-        return UserConverter.convertUserToUserRegisterResponse(userRepository.save(newUser));
+    public User saveUserSilent(User user) {
+        user.setHashedPassword(passwordEncoder.encode(user.getHashedPassword()));
+        return userRepository.save(user);
     }
 
     @Override

@@ -28,13 +28,10 @@ public class MessageService {
         return messageRepository.findAllByConversation_IdOrderByCreatedAtAsc(id);
     }
 
-    public Message createMessage(MessageCreationRequest request, Conversation conversation, User senderUser) {
-        Message message = new Message();
-        message.setBody(request.getBody());
-        message.setImage(request.getImage());
+    public Message createMessage(Message message, Conversation conversation, User senderUser, User seenUser) {
         message.setConversation(conversation);
         message.setSenderUser(senderUser);
-        message.addSeenUser(senderUser);
+        message.addSeenUser(seenUser);
         return messageRepository.save(message);
     }
 

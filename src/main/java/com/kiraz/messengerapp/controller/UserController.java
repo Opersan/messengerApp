@@ -34,10 +34,10 @@ public class UserController {
     }
 
     @GetMapping("/userExceptItself")
-    public Set<UserDTO> getAllUsersExceptItself(@RequestParam(value="email") String email) {
+    public ResponseEntity<Set<UserDTO>> getAllUsersExceptItself(@RequestParam(value="email") String email) {
         Set<UserDTO> users = UserConverter.convertUserListToUserDTOList(new HashSet<>(userService.getAllUsersExceptItself(email)));
         if (users.isEmpty()) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-        return users;
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     public User getUserById( Long id) {
@@ -50,30 +50,30 @@ public class UserController {
     }
 
     @PutMapping("/updateUser")
-    public UserDTO updateUserInfo(@RequestBody UserUpdateRequest request) {
+    public ResponseEntity<UserDTO> updateUserInfo(@RequestBody UserUpdateRequest request) {
         System.out.println(request.getName());
-        UserDTO user = UserConverter.convertUsertoUserDTO(userService.updateUserByUserDTO(request));
-        return user;
+        UserDTO user = UserConverter.convertUsertoUserDTO(userService.updateUserByUserDTO(UserConverter.convertUserRegisterRequestToUser(request)));
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping("/userById")
-    public UserDTO getUserDTOById(@RequestParam(value="id") Long id) {
+    public ResponseEntity<UserDTO> getUserDTOById(@RequestParam(value="id") Long id) {
         Optional<User> user = userService.getUser(id);
         if (user.isPresent()) {
-            return UserConverter.convertUserToUserDTO(user.get());
+            return new ResponseEntity<>(UserConverter.convertUserToUserDTO(user.get()), HttpStatus.OK);
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
     }
 
     @GetMapping("/userByEmail")
-    public UserDTO getUserByEmail(@RequestParam(value="email") String email) {
+    public ResponseEntity<UserDTO> getUserByEmail(@RequestParam(value="email") String email) {
         Optional<User> user = null;
         if (!email.isEmpty()) {
             user = userService.getUserByEmail(email);
         }
         if (user.isPresent()) {
-            return UserConverter.convertUserToUserDTO(user.get());
+            return new ResponseEntity<>(UserConverter.convertUserToUserDTO(user.get()), HttpStatus.OK);
         } else {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT);
         }

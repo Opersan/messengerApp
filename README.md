@@ -46,7 +46,7 @@ To run the Clone Messaging Application locally, follow these steps:
 4. Install dependencies for the Spring Boot project by using Gradle.
 5. Start the Back-End server: `cd ../../.. && ./gradlew bootRun`
 
-![](Resources/1.webp)
+![](Resources/2.webp)
 
 Once the servers are up and running, you can access the application by navigating to `http://localhost:3000` in your web browser.
 
