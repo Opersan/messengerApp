@@ -19,7 +19,7 @@ export async function POST(
             return new NextResponse('Unauthorized', {status: 401});
         }
 
-        const newMessage = await axios.post('/api/messages/createMessage', {
+        const newMessage = await axios.post(process.env.SPRING_API_URL + '/api/messages/createMessage', {
             body: message,
             image: image,
             conversationId: conversationId,
@@ -28,7 +28,7 @@ export async function POST(
             //todo lastMessageAt değerini de güncelle
         });
 
-        const updatedConversation = await axios.put('/api/conversations/updateConversation', {
+        const updatedConversation = await axios.put(process.env.SPRING_API_URL + '/api/conversations/updateConversation', {
             conversationId: conversationId
         });
 

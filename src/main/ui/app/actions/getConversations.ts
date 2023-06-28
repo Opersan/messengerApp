@@ -9,7 +9,7 @@ const getConversations =  async () => {
     }
 
     try {
-        const conversations =  await axios.get('/api/conversations/allConversationsByUserId', {
+        const conversations =  await axios.get(process.env.SPRING_API_URL + '/api/conversations/allConversationsByUserId', {
             params: {id: currentUser.id}
         });
 

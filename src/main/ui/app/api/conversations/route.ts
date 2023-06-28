@@ -32,7 +32,7 @@ export async function POST(
         }
 
         if (isGroup) {
-            const newConversation = await axios.post('/api/conversations/createGroupConversation', {
+            const newConversation = await axios.post(process.env.SPRING_API_URL + '/api/conversations/createGroupConversation', {
                 name: name,
                 members: members
             });
@@ -47,7 +47,7 @@ export async function POST(
             return NextResponse.json(newConversation.data);
         }
 
-        const existingConversations = await axios.get('/api/conversations/conversationByUserId', {
+        const existingConversations = await axios.get(process.env.SPRING_API_URL + '/api/conversations/conversationByUserId', {
             params: {
                 senderId: currentUser.id,
                 receiverId: userId
@@ -59,7 +59,7 @@ export async function POST(
             return NextResponse.json(singleConversation);
         }
 
-        const newConversation = await axios.post('/api/conversations/createConversation', {
+        const newConversation = await axios.post(process.env.SPRING_API_URL + '/api/conversations/createConversation', {
             senderUser: {
                 id: currentUser.id
             },

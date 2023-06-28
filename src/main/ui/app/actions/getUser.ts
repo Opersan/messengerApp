@@ -9,7 +9,7 @@ const getUser = async () => {
   }
 
   try {
-      const users = await axios.get(`/api/userExceptItself`, {params: {email: session?.user?.email}});
+      const users = await axios.get(process.env.SPRING_API_URL + `/api/userExceptItself`, {params: {email: session?.user?.email}});
       return users.data;
   } catch (error: any) {
       return [];

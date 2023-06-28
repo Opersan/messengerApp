@@ -19,7 +19,7 @@ export async function POST(
             return new NextResponse( 'Unauthorized', { status: 401});
         }
 
-        const updatedUser = await axios.put( '/api/updateUser', {
+        const updatedUser = await axios.put( process.env.SPRING_API_URL + '/api/updateUser', {
                 name: name,
                 email: email,
                 image: image

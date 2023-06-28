@@ -16,9 +16,9 @@ const nextConfig = {
     async rewrites() {
         return [
             {
-                source: '/api/auth/loginWithPwd',
-                destination: 'http://localhost:8080/api/auth/loginWithPwd',
-            },
+                source: '/api/auth/save',
+                destination: 'http://localhost:8080/api/auth/save',
+            }
         ]
     },
 }
