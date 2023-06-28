@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
     experimental: {
         swcPlugins: [
@@ -11,7 +12,15 @@ const nextConfig = {
             "avatars.githubusercontent.com",
             "lh3.googleusercontent.com"
         ]
-    }
+    },
+    async rewrites() {
+        return [
+            {
+                source: '/api/auth/loginWithPwd',
+                destination: 'http://localhost:8080/api/auth/loginWithPwd',
+            },
+        ]
+    },
 }
 
 module.exports = nextConfig

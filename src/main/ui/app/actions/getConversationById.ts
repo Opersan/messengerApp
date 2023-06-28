@@ -11,7 +11,7 @@ const getConversationById = async (
             return null;
         }
 
-        const conversation = await axios.get(process.env.SPRING_API_URL + '/api/conversations/conversationById', {
+        const conversation = await axios.get('/api/conversations/conversationById', {
             params: {
                 conversationId: conversationId
             }

@@ -4,7 +4,7 @@ const getMessages = async (
     conversationId: string
 ) => {
     try {
-        const messages = await axios.get(process.env.SPRING_API_URL + '/api/messages/messagesByConversationId', {
+        const messages = await axios.get('/api/messages/messagesByConversationId', {
             params: {
                 conversationId: conversationId
             }

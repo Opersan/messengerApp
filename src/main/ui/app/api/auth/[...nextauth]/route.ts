@@ -22,7 +22,7 @@ export const authOptions: AuthOptions = {
             },
             // todo Şifreyi API'ye yollamadan önce şifrelemek mantıklı olabilir?
             async authorize(credentials, req) {
-                const response = await axios.post(process.env.SPRING_API_URL + '/api/auth/loginWithPwd', {email: credentials?.email, password: credentials?.password})
+                const response = await axios.post( '/api/auth/loginWithPwd', {email: credentials?.email, password: credentials?.password})
                     .then(function (response){
                         return response.data;
                     }).catch(function (error) {
@@ -44,7 +44,7 @@ export const authOptions: AuthOptions = {
             const isAllowedToSignIn = true
             if (isAllowedToSignIn) {
                 if (account?.type == 'oauth') {
-                    axios.post(process.env.SPRING_API_URL + '/api/auth/loginWithOAuth2', {
+                    axios.post('/api/auth/loginWithOAuth2', {
                         account: account,
                         profile: profile
                     }).then().catch(function (error) {

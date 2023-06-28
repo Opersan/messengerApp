@@ -13,8 +13,6 @@ import {signIn, useSession} from "next-auth/react";
 import {useRouter} from "next/navigation";
 
 type Variant = 'LOGIN' | 'REGISTER';
-const MESSENGER_API_URL = "http://localhost:8080";
-let access_token;
 
 const AuthForm = () => {
   const session = useSession();
@@ -54,8 +52,7 @@ const AuthForm = () => {
     setIsLoading(true);
 
     if(variant === 'REGISTER') {
-      //todo Buradaki URL için client-side env file oluştur
-      axios.post('http://localhost:8080' + '/api/auth/save', data)
+      axios.post('/api/auth/save', data)
           .then(() =>{
             signIn('credentials', data)
           })

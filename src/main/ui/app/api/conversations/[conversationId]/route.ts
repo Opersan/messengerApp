@@ -20,7 +20,7 @@ export async function DELETE(
         }
 
         const existingConversation =
-            await axios.delete(process.env.SPRING_API_URL + '/api/conversations/deleteConversation', {
+            await axios.delete('/api/conversations/deleteConversation', {
             params: {
                 conversationId: conversationId,
                 userId: currentUser.id

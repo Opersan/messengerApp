@@ -8,7 +8,7 @@ const getCurrentUser = async () => {
         if (!session?.user?.email) {
             return null;
         }
-        const currentUser = await axios.get(process.env.SPRING_API_URL + `/api/userByEmail`, {params: {email: session?.user?.email}});
+        const currentUser = await axios.get(`/api/userByEmail`, {params: {email: session?.user?.email}});
         if (!currentUser) {
             return null;
         }

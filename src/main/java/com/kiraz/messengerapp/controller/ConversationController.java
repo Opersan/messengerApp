@@ -1,7 +1,6 @@
 package com.kiraz.messengerapp.controller;
 
 import com.kiraz.messengerapp.annotation.JsonArg;
-import com.kiraz.messengerapp.converter.UserConverter;
 import com.kiraz.messengerapp.dto.ConversationDTO;
 import com.kiraz.messengerapp.dto.GroupConversationDTO;
 import com.kiraz.messengerapp.dto.GroupUserDTO;
@@ -10,7 +9,6 @@ import com.kiraz.messengerapp.model.Conversation;
 import com.kiraz.messengerapp.converter.ConversationConverter;
 import com.kiraz.messengerapp.model.User;
 import com.kiraz.messengerapp.service.ConversationService;
-import jakarta.persistence.JoinColumn;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
