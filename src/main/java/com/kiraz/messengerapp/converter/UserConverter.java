@@ -40,7 +40,7 @@ public interface UserConverter {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "hashedPassword", ignore = true)
-    @Mapping(target = "image", ignore = true)
+    @Mapping(target="image", source = "picture")
     @Mapping(target = "emailVerified", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)

@@ -62,6 +62,10 @@ public class ConversationController {
         }
     }
 
+    public void updateLastMessageAt(Conversation conversation) {
+        conversationService.updateConversationLastMessageAt(conversation);
+    }
+
     @GetMapping("/conversationByUserId")
     public ResponseEntity<ConversationDTO> getConversationByUserId(@RequestParam(value = "senderId") Long id1, @RequestParam(value = "receiverId") Long id2) {
         User user1 = userController.getUserById(id1);

@@ -56,6 +56,7 @@ public class MessageController {
         User seenUser = userController.getUserById(request.getSeenUserId());
         Conversation conversation = conversationConverter.convertConversationDTOToConversation(
                 conversationController.getConversationById(Long.valueOf(request.getConversationId())));
+        conversationController.updateLastMessageAt(conversation);
         Message messages = messageService.createMessage(messageConverter.convertMessageCreationRequestToMessage(request), conversation, senderUser, seenUser);
         if (messages == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(messageConverter.convertMessageToMessageDTO(messages), HttpStatus.OK);

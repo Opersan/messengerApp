@@ -70,6 +70,11 @@ public class ConversationService {
         return conversationRepository.save(conversation.get());
     }
 
+    public void updateConversationLastMessageAt(Conversation conversation) {
+        conversation.setLastMessageAt(Instant.now());
+        conversationRepository.save(conversation);
+    }
+
     public Optional<Conversation> deleteConversation(Long id, User user) {
         Optional<Conversation> conversation = conversationRepository.findById(id);
         if (conversation.get().getUsers().contains(user)) {

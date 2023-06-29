@@ -61,5 +61,6 @@ Once the servers are up and running, you can access the application by navigatin
 ## Endpoints List and Their Descriptions
 
 ## Security
+Strict-Transport-Security and https only for password transportation
 
 ## Future Works

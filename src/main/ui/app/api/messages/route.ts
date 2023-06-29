@@ -25,7 +25,6 @@ export async function POST(
             conversationId: conversationId,
             senderUserId: currentUser.id,
             seenUserId: currentUser.id
-            //todo lastMessageAt değerini de güncelle
         });
 
         const updatedConversation = await axios.put(process.env.SPRING_API_URL + '/api/conversations/updateConversation', {

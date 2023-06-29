@@ -58,7 +58,7 @@ public class AuthController {
     }
 
     @PostMapping("/loginWithPwd")
-    public ResponseEntity<UserLoginRequest> loginWithPwd(@Valid @RequestBody UserLoginRequest user) {
+    public ResponseEntity<UserLoginResponse> loginWithPwd(@Valid @RequestBody UserLoginRequest user) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
@@ -70,9 +70,12 @@ public class AuthController {
 
         final UserDetails userDetails = userService.loadUserByUsername(user.getEmail());
         final UserLoginResponse userLoginResponse = new UserLoginResponse();
+        // todo burayı düzelt
+        userLoginResponse.setEmail(user.getEmail());
+        userLoginResponse.setPassword(user.getPassword());
         userLoginResponse.setAccessToken(jwtTokenService.generateToken(userDetails));
 
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(userLoginResponse, HttpStatus.OK);
     }
 
     @PostMapping("/loginWithOAuth2")

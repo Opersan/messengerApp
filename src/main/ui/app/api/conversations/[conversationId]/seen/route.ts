@@ -51,7 +51,6 @@ export async function POST(
             message: [payload]
         });
 
-
         // @ts-ignore
         if(lastMessage.seenUsers.filter((user) => user.id != currentUser.id).length > 0) {
             return NextResponse.json(conversation.data);

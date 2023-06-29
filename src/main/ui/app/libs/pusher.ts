@@ -18,4 +18,4 @@ export const pusherClient = new PusherClient(
         },
         cluster: 'eu'
     }
-)
+);
