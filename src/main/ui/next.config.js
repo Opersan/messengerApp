@@ -20,10 +20,7 @@ const nextConfig = {
                 destination: 'http://localhost:8080/api/auth/save',
             }
         ]
-    },
-    api: {
-        externalResolver: true,
-    },
+    }
 }
 
 module.exports = nextConfig

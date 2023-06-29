@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "../ui/node_modules/.bin/next dev",
+    "dev": " NODE_OPTIONS=\"--max_old_space_size=4096\" ../ui/node_modules/.bin/next dev",
     "build": "../ui/node_modules/.bin/next build",
     "start": "../ui/node_modules/.bin/next start",
     "lint": "../ui/node_modules/.bin/next lint"

@@ -38,8 +38,6 @@ export async function POST(
 
         const lastMessage = updatedConversation.data.messages[updatedConversation.data.messages.length - 1];
 
-        delete lastMessage.seenUsers;
-
         // @ts-ignore
         updatedConversation.data.users.map((user) => {
             pusherServer.trigger(user.email!, 'conversation:update', {

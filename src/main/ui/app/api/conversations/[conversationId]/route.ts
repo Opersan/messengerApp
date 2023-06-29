@@ -41,7 +41,7 @@ export async function DELETE(
         // @ts-ignore
         existingConversation.data.users.forEach((user) => {
             if (user.email) {
-                pusherServer.trigger(user.email, "conversation:remove", existingConversation.data);
+                pusherServer.trigger(user.email, "conversation:remove", payload);
             }
         })
 

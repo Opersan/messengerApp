@@ -38,7 +38,6 @@ export async function POST(
             messageId: lastMessage.id,
             userId: currentUser.id
         });
-        // todo update seen of last message where lastMessage.id user'ı seen set'ine ekle
 
         let payload = updatedMessage.data;
 
@@ -48,17 +47,16 @@ export async function POST(
 
         await pusherServer.trigger(currentUser.email, 'conversation:update', {
             id: conversationId,
-            message: [payload]
+            messages: [payload]
         });
 
-        // @ts-ignore
-        if(lastMessage.seenUsers.filter((user) => user.id != currentUser.id).length > 0) {
+        if(lastMessage.senderUser == currentUser.id) {
             return NextResponse.json(conversation.data);
         }
 
         await pusherServer.trigger(conversationId!, 'message:update', updatedMessage.data);
 
-        return NextResponse.json(updatedMessage.data);
+        return NextResponse.json('Success');
     } catch (error: any) {
         console.log(error, 'ERROR_MESSAGES_SEEN');
         return new NextResponse("Internal Error", {status: 500});

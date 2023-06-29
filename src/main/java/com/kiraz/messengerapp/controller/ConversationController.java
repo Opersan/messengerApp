@@ -9,6 +9,7 @@ import com.kiraz.messengerapp.model.Conversation;
 import com.kiraz.messengerapp.converter.ConversationConverter;
 import com.kiraz.messengerapp.model.User;
 import com.kiraz.messengerapp.service.ConversationService;
+import com.kiraz.messengerapp.utils.ConversationUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,8 +47,9 @@ public class ConversationController {
     @GetMapping("/conversationById")
     public ResponseEntity<ConversationDTO> getConversation(@RequestParam(value = "conversationId") Long id) {
         Optional<Conversation> conversation = conversationService.getConversation(id);
+        Conversation orderedConversation = ConversationUtils.orderConversationsByLastMessage("asc", conversation.get());
         if (conversation.isPresent()) {
-            return new ResponseEntity<>(conversationConverter.convertConversationToConversationDTO(conversation.get()), HttpStatus.OK);
+            return new ResponseEntity<>(conversationConverter.convertConversationToConversationDTO(orderedConversation), HttpStatus.OK);
         } else {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT);
         }
@@ -79,6 +81,7 @@ public class ConversationController {
     public ResponseEntity<Set<ConversationDTO>> getAllConversationByUserId(@RequestParam Long id) {
         User user = userController.getUserById(id);
         Set<Conversation> conversations = conversationService.getAllConversationByUser(user);
+        conversations = ConversationUtils.orderConversationsByLastMessage("asc", conversations);
         if (!conversations.isEmpty()) {
             return new ResponseEntity<>(conversationConverter.convertConversationSetToConversationDTOSet(conversations), HttpStatus.OK);
         } else {
@@ -109,9 +112,10 @@ public class ConversationController {
 
     @PutMapping("/updateConversation")
     public ResponseEntity<ConversationDTO> updateConversationLastMessageAt(@JsonArg("conversationId") String conversationId) {
-        ConversationDTO conversation = conversationConverter.convertConversationToConversationDTO(conversationService.updateConversationLastMessageAt(Long.valueOf(conversationId)));
+        Conversation conversation = conversationService.updateConversationLastMessageAt(Long.valueOf(conversationId));
+        Conversation orderedConversation = ConversationUtils.orderConversationsByLastMessage("asc", conversation);
         if (conversation == null) throw new ResponseStatusException(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<>(conversation, HttpStatus.OK);
+        return new ResponseEntity<>(conversationConverter.convertConversationToConversationDTO(orderedConversation), HttpStatus.OK);
     }
 
     @DeleteMapping("/deleteConversation")

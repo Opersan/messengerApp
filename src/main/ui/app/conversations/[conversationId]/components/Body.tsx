@@ -36,6 +36,7 @@ const Body: React.FC<BodyProps> = ({
 
                 return [...current, message];
             })
+
             bottomRef?.current?.scrollIntoView();
         };
 
@@ -58,6 +59,7 @@ const Body: React.FC<BodyProps> = ({
             pusherClient.unbind('message:update', updateMessageHandler);
         }
     }, [conversationId]);
+
 
     return (
         <div className="flex-1 overflow-y-auto">
