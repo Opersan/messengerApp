@@ -71,7 +71,9 @@ export async function POST(
         let payload = newConversation.data;
 
         delete payload.users[0].seenMessages;
+        delete payload.users[0].messages;
         delete payload.users[1].seenMessages;
+        delete payload.users[1].messages;
 
         // @ts-ignore
         newConversation.data.users.map((user) => {

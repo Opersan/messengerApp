@@ -41,9 +41,7 @@ export async function POST(
 
         let payload = updatedMessage.data;
 
-        delete payload.seenUsers;
         delete payload.conversation;
-        delete payload.senderUser;
 
         await pusherServer.trigger(currentUser.email, 'conversation:update', {
             id: conversationId,

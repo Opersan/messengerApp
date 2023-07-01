@@ -31,12 +31,14 @@ export async function POST(
             conversationId: conversationId
         });
 
+        let payload = newMessage.data;
 
-        delete newMessage.data.conversation;
+        delete payload.conversation;
 
-        await pusherServer.trigger(conversationId, 'message:new', newMessage.data);
+        await pusherServer.trigger(conversationId, 'message:new', payload);
 
         const lastMessage = updatedConversation.data.messages[updatedConversation.data.messages.length - 1];
+
 
         // @ts-ignore
         updatedConversation.data.users.map((user) => {

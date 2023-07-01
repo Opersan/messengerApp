@@ -34,9 +34,11 @@ export async function DELETE(
         let payload = existingConversation.data;
 
         delete payload.users[0].conversations;
-        delete payload.users[1].conversations;
         delete payload.users[0].seenMessages;
+        delete payload.users[0].messages;
+        delete payload.users[1].conversations;
         delete payload.users[1].seenMessages;
+        delete payload.users[1].messages;
 
         // @ts-ignore
         existingConversation.data.users.forEach((user) => {

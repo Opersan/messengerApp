@@ -51,7 +51,8 @@ const ConversationList: React.FC<ConversationsListProps> = ({
 
         const updateHandler = (conversation: Conversation) => {
             setItems((current) => current.map((currentConversation) => {
-                if (currentConversation.id === conversation.id) {
+                // @ts-ignore
+                if (currentConversation.id === parseInt(conversation.id)) {
                     return {
                         ...currentConversation,
                         messages: conversation.messages
