@@ -4,7 +4,7 @@ import {Conversation, User} from "@/app/types";
 import useOtherUser from "@/app/hooks/useOtherUser";
 import {useSession} from "next-auth/react";
 import {useRouter} from "next/navigation";
-import {useCallback, useMemo} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import {format} from "date-fns";
 import clsx from "clsx";
 import Avatar from "@/app/components/Avatar";
@@ -24,10 +24,9 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
 }) => {
     const otherUser = useOtherUser(data);
     const otherUsers = useOtherUsers(data);
-    const session = useSession();
+    const { data: session, status } = useSession();
     const router = useRouter();
-
-    const currentUser = users.filter((user) => user.email === session.data?.user?.email)[0];
+    const [hasSeen, setHasSeen] = useState(false);
 
     const handleClick = useCallback(() => {
         router.push(`/conversations/${data.id}`)
@@ -38,14 +37,13 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
         return messages[messages.length - 1];
     }, [data.messages]);
 
-    const hasSeen = useMemo(() => {
-        if (!lastMessage) return false;
-        const seenArray = lastMessage.seenUsers || [];
-        if (!currentUser?.id) return false;
+    useEffect(()=> {
+        if (status == "loading") return
+        const currentUser = users.filter((user) => user.email === session?.user?.email)[0];
+        const seenArray = lastMessage?.seenUsers || [];
         // @ts-ignore
-        return seenArray.filter((user) => user === currentUser?.id).length != 0;
-    }, [currentUser?.id, lastMessage]);
-
+        setHasSeen(lastMessage && currentUser?.id && seenArray.filter((user) => user.id === currentUser?.id).length != 0);
+    }, [session, lastMessage, status]);
 
     const lastMessageText = useMemo(() => {
         if (lastMessage?.image) {
