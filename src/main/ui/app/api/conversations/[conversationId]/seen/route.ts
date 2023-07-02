@@ -2,6 +2,7 @@ import {NextResponse} from "next/server";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import axios from "axios";
 import {pusherServer} from "@/app/libs/pusher";
+import getSession from "@/app/actions/getSession";
 
 interface IParams{
     conversationId?: string
@@ -13,6 +14,18 @@ export async function POST(
 ) {
     try {
         const currentUser = await getCurrentUser();
+        const session = await getSession();
+        const access_token = session?.token;
+
+        axios.interceptors.request.use(
+            config => {
+                config.headers['Authorization'] = `Bearer ${access_token}`;
+                return config;
+            },
+            error => {
+                return Promise.reject(error);
+            }
+        );
 
         const { conversationId } = params;
 

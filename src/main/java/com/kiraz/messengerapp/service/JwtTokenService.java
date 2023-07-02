@@ -39,7 +39,7 @@ public class JwtTokenService {
 
     public String validateTokenAndGetEmail(final String token) {
         try {
-            return verifier.verify(token).getToken();
+            return verifier.verify(token).getSubject();
         }catch (final JWTVerificationException verificationEx) {
             log.warn("token invalid: {}", verificationEx.getMessage());
             return null;

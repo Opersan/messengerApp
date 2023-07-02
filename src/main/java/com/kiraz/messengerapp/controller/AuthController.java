@@ -11,6 +11,7 @@ import com.kiraz.messengerapp.service.UserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -69,13 +70,11 @@ public class AuthController {
         }
 
         final UserDetails userDetails = userService.loadUserByUsername(user.getEmail());
-        final UserLoginResponse userLoginResponse = new UserLoginResponse();
-        // todo burayı düzelt
-        userLoginResponse.setEmail(user.getEmail());
-        userLoginResponse.setPassword(user.getPassword());
-        userLoginResponse.setAccessToken(jwtTokenService.generateToken(userDetails));
+        final UserLoginResponse userLoginResponse = userConverter.convertUserLoginRequestToUserLoginResponse(user);
 
-        return new ResponseEntity<>(userLoginResponse, HttpStatus.OK);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, jwtTokenService.generateToken(userDetails))
+                .body(userLoginResponse);
     }
 
     @PostMapping("/loginWithOAuth2")
@@ -99,8 +98,9 @@ public class AuthController {
 
         final UserDetails userDetails = userService.loadUserByUsername("");
         final UserLoginResponse userLoginResponse = new UserLoginResponse();
-        userLoginResponse.setAccessToken(jwtTokenService.generateToken(userDetails));
 
-        return new ResponseEntity<>(userLoginResponse, HttpStatus.OK);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, jwtTokenService.generateToken(userDetails))
+                .body(userLoginResponse);
     }
 }

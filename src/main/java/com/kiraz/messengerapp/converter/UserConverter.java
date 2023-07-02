@@ -49,4 +49,7 @@ public interface UserConverter {
     @Mapping(target = "account", ignore = true)
     @Mapping(target = "messages", ignore = true)
     User convertProfileToUser(ProfileDTO profileDTO);
+
+    UserLoginResponse convertUserLoginRequestToUserLoginResponse(UserLoginRequest request);
+
 }

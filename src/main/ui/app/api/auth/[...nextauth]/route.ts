@@ -3,7 +3,10 @@ import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from "axios";
-
+export enum Role {
+    user = "user",
+    admin = "admin",
+}
 export const authOptions: AuthOptions = {
     providers: [
         GitHubProvider({
@@ -19,18 +22,24 @@ export const authOptions: AuthOptions = {
             credentials: {
                 email: {label: 'email', type: 'text'},
                 password: {label: 'password', type: 'password'},
+                access_token: {}
             },
             // todo Şifreyi API'ye yollamadan önce şifrelemek mantıklı olabilir?
             async authorize(credentials, req) {
                 const response = await axios.post( process.env.SPRING_API_URL + '/api/auth/loginWithPwd', {email: credentials?.email, password: credentials?.password})
-                    .then(function (response){
-                        return response.data;
-                    }).catch(function (error) {
+                .catch(function (error) {
                         if (error.response.status === 403) {
                             return null;
                         }
                     });
-                return response;
+
+                const user = {
+                    email: response?.data.email,
+                    access_token: response?.headers.authorization,
+                }
+                console.log(user.access_token);
+                if(user) return user;
+                return null;
             }
         })
     ],
@@ -54,6 +63,20 @@ export const authOptions: AuthOptions = {
             } else {
                 return false
             }
+        },
+        // todo refresh at interval given token
+        async jwt({ token, user, account, profile, isNewUser }) {
+            if(user) {
+                // @ts-ignore
+                token.token = user.access_token;
+            }
+            return token
+        },
+        async session({ session, user, token }) {
+            if(token) {
+                session.token = token.token;
+            }
+            return session
         }
     },
     debug: process.env.NODE_ENV === 'development',

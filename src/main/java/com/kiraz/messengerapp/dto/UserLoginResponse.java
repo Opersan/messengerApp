@@ -9,7 +9,4 @@ import lombok.Setter;
 @Setter
 public class UserLoginResponse {
     private String email;
-    private String password;
-    private String accessToken;
-    private String image;
 }
