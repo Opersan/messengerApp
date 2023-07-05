@@ -62,11 +62,6 @@ Once the servers are up and running, you can access the application by navigatin
 
 ![](Resources/1.webp)
 
-## Endpoints List and Their Descriptions
-
-## Security
-Strict-Transport-Security and Https only for sensitive payloads.
-
 ## Future Works
 1. [ ] Caffeine Cache feature will be added.
 2. [ ] All internal api system will be converted to microservice structure.
@@ -76,3 +71,10 @@ Strict-Transport-Security and Https only for sensitive payloads.
 6. [ ] IOS Bitmoji integration will be considered.
 7. [ ] Load and mock tests will be implemented and results will be shared here.
 8. [ ] Examine and find out if Apache Kafka logic is applicable after transition
+
+## API Endpoints
+
+
+## Security
+Strict-Transport-Security and Https only for sensitive payloads.
+
