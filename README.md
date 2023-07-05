@@ -65,6 +65,14 @@ Once the servers are up and running, you can access the application by navigatin
 ## Endpoints List and Their Descriptions
 
 ## Security
-Strict-Transport-Security and https only for password transportation
+Strict-Transport-Security and Https only for sensitive payloads.
 
 ## Future Works
+1. [ ] Caffeine Cache feature will be added.
+2. [ ] All internal api system will be converted to microservice structure.
+3. [ ] After transition processes, DevOps logic will be adopted and GitOPS tools will be used.
+4. [ ] Client-side Service Discovery (Spring Cloud Netflix Eureka) feature will be added.
+5. [ ] Deployment and DevOPS architecture diagram should be drawn.
+6. [ ] IOS Bitmoji integration will be considered.
+7. [ ] Load and mock tests will be implemented and results will be shared here.
+8. [ ] Examine and find out if Apache Kafka logic is applicable after transition
